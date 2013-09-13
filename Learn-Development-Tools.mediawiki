@@ -1,0 +1,256 @@
+In this section, you'll bring up the development environment.  In the process, you'll be introduced to tools that will later prove useful for turning the provided hub into a learning switch.  You'll cover both general and OpenFlow-specific debugging tools.
+
+Let's define some terminology, starting with terminal types:
+
+* '''VirtualBox''' console terminal: connects to OpenFlowTutorial.  This is the one created when you started up the VM.  You can't copy and paste from this tutorial page to the console terminal, so it's a bit of a pain.  '''Minimize this NOW, if you haven't already done so'''.  Once you've used it to set up networking, it won't be needed.
+
+* '''SSH''' terminal: connects to OpenFlowTutorial.  Created by using putty on Windows or SSH on OS X / Linux, as described in the previous section.  Copy and paste should work on this terminal.
+
+* '''xterm''' terminal: connects to a host in the virtual network.  Created in the next section when you start up the virtual network.  Will be labeled at the top with the name of the host.
+
+The OpenFlowTutorial VM includes a number of OpenFlow-specific and general networking utilities pre-installed.  Please read the short descriptions:
+
+* '''OpenFlow Controller''': sits above the OpenFlow interface.  The OpenFlow reference distribution includes a controller that acts as an Ethernet learning switch in combination with an OpenFlow switch.  You'll run it and look at messages being sent.  Then, in the next section, you'll write our own controller on top of NOX or Beacon (platforms for writing controller applications).
+
+* '''OpenFlow Switch''': sits below the OpenFlow interface.  The OpenFlow reference distribution includes a user-space software switch.  Open vSwitch is another software but kernel-based switch, while there is a number of hardware switches available from Broadcom (Stanford Indigo release), HP, NEC, and others.
+
+* '''dpctl''': command-line utility that sends quick OpenFlow messages, useful for viewing switch port and flow stats, plus manually inserting flow entries.
+
+* '''Wireshark''': general (non-OF-specific) graphical utility for viewing packets.  The OpenFlow reference distribution includes a Wireshark dissector, which parses OpenFlow messages sent to the OpenFlow default port (6633) in a conveniently readable way.
+
+* '''iperf''': general command-line utility for testing the speed of a single TCP connection.
+
+* '''Mininet''': network emulation platform.  Mininet creates a virtual OpenFlow network - controller, switches, hosts, and links - on a single real or virtual machine. More Mininet details can be found at the [http://openflow.org/mininet Mininet web page].
+
+* '''cbench''': utility for testing the flow setup rate of OpenFlow controllers. 
+
+From here on out, make sure to copy and paste as much as possible!  For example, manually typing in ‘sudo dpctl show n1:0’ may look correct, but will cause a confusing error; the 'nl' is short for NetLink, not n-one.
+
+Let's get started...
+
+== Start Network ==
+The network you'll use for the first exercise includes 3 hosts and a switch (and, eventually, an OpenFlow controller, but we'll get to that later):
+
+
+[[File:Three_switch_layout_simple.png]]
+ 
+
+To create this network in the VM, in an SSH terminal, enter:
+ $ sudo mn --topo single,3 --mac --switch ovsk --controller remote
+
+This tells Mininet to start up a 3-host, single-(openvSwitch-based)switch topology, set the MAC address of each host equal to its IP, and point to a remote controller which defaults to the localhost.
+
+Here's what Mininet just did:
+* Created 3 virtual hosts, each with a separate IP address.
+* Created a single OpenFlow software switch in the kernel with 3 ports. 
+* Connected each virtual host to the switch with a virtual ethernet cable.
+* Set the MAC address of each host equal to its IP.
+* Configure the OpenFlow switch to connect to a remote controller.
+
+== Mininet Brief Intro ==
+Since you'll be working in [http://mininet.github.com Mininet] for the whole tutorial, it's worth learning a few Mininet-specific commands:
+
+To see the list of nodes available, in the Mininet console, run:
+ mininet> nodes
+
+
+To see a list of available commands, in the Mininet console, run:
+ mininet> help
+
+To run a single command on a node, prepend the command with the name of the node.  For example, to check the IP of a virtual host, in the Mininet console, run:
+ mininet> h1 ifconfig
+
+The alternative - better for running interactive commands and watching debug output - is to spawn an xterm for one or more virtual hosts.  In the Mininet console, run:
+ mininet> xterm h1 h2
+
+You can close these windows now, as we'll run through most commands in the Mininet console.
+
+If Mininet is not working correctly (or has crashed and needs to be restarted), first quit Mininet if necessary (using the <code>exit</code> command, or control-D), and then try clearing any residual state or processes using:
+
+ $ sudo mn -c
+
+and running Mininet again. 
+
+<font color=red> NB: The prompt <code> mininet> </code> is for Mininet console, <code> $ </code> is for SSH terminal (normal user) and <code> # </code> is for SSH terminal (root user) </font> (See  [http://www.openflow.org/wk/index.php/OpenFlow_Tutorial#Command_Prompt_Notes Command Prompt Notes]).  Hereafter we follow with this rule.
+
+Mininet has loads of other commands and startup options to help with debugging, and this brief starter should be sufficient for the tutorial.  If you're curious about other options, follow the [http://www.openflowswitch.org/foswiki/bin/view/OpenFlow/MininetWalkthrough Mininet Walkthrough] after the main tutorial.
+
+== dpctl Example Usage ==
+'''dpctl''' is a utility that comes with the OpenFlow reference distribution and enables visibility and control over a single switch's flow table.  It is especially useful for debugging, by viewing flow state and flow counters.  Most OpenFlow switches can start up with a passive listening port (in your current setup this is 6634), from which you can poll the switch, without having to add debugging code to the controller.
+
+Create a second SSH window if you don't already have one, and run:
+ $ dpctl show tcp:127.0.0.1:6634
+
+The 'show' command connects to the switch and dumps out its port state and capabilities.
+
+Here's a more useful command:
+ $ dpctl dump-flows tcp:127.0.0.1:6634
+
+Since we haven't started any controller yet, the flow-table should be empty.
+
+== Ping Test ==
+
+Now, go back to the mininet console and try to ping h2 from h1. In the Mininet console:
+ mininet> h1 ping -c3 h2
+
+Note that the name of host h2 is automatically replaced when running commands in the Mininet console with its IP address (10.0.0.2).
+
+Do you get any replies? Why? Why not?
+
+As you saw before, switch flow table is empty. Besides that, there is no controller connected to the switch and therefore the switch doesn't know what to do with incoming traffic, leading to ping failure.
+
+You'll use dpctl to manually install the necessary flows. In your SSH terminal:
+ $ dpctl add-flow tcp:127.0.0.1:6634 in_port=1,actions=output:2
+ $ dpctl add-flow tcp:127.0.0.1:6634 in_port=2,actions=output:1
+
+This will forward packets coming at port 1 to port 2 and vice-verca. Verify by checking the flow-table
+ $ dpctl dump-flows tcp:127.0.0.1:6634
+
+Run the ping command again. In your mininet console:
+ mininet> h1 ping -c3 h2
+
+Do you get replies now? Check the flow-table again and look the statistics for each flow entry. Is this what you expected to see based on the ping traffic?
+NOTE: if you didn't see any ping replies coming through, it might be the case that the flow-entries expired before you start your ping test. When you do a "dpctl dump-flows" you can see an "idle_timeout" option for each entry, which defaults to 60s. This means that the flow will expire after 60secs if there is no incoming traffic. Run again respecting this limit, or install a flow-entry with longer timeout.
+ $ dpctl add-flow tcp:127.0.0.1:6634 in_port=1,idle_timeout=120,actions=output:2
+
+== Start Wireshark ==
+
+The VM image includes the OpenFlow Wireshark dissector pre-installed.  Wireshark is extremely useful for watching OpenFlow protocol messages, as well as general debugging.  
+
+Start a new SSH terminal and connect to the VM with X11 forwarding. 
+
+(Reminder: here are the command-line commands to do so:
+
+If you're using MAC OS X or Linux, enter:
+ $ ssh -X openflow@[guest ip address]
+If you're using putty.exe from the Windows command-lineshell, enter:
+ C:> putty.exe -X openflow@[guest ip address]
+
+If you're using putty's GUI, make sure X11 forwarding is enabled.)
+
+Now open Wireshark:
+ $ sudo wireshark &
+
+You'll probably get a warning message for using wireshark with root access. Press OK.
+
+Click on Capture->Interfaces in the menu bar.  Click on the Start button next to 'lo', the loopback interface.  You may see some packets going by.
+
+Now, set up a filter for OpenFlow control traffic, by typing 'of' in Filter box near the top:
+ of
+
+Press the apply button to apply the filter to all recorded traffic.
+
+== Start Controller and view Startup messages in Wireshark ==
+
+Now, with the Wireshark dissector listening, start the OpenFlow reference controller.
+In your SSH terminal:
+ $ controller ptcp:
+This starts a simple controller that acts as a learning switch without installing any flow-entries.
+
+You should see a bunch of messages displayed in Wireshark, from the Hello exchange onwards.  As an example, click on the Features Reply message.  Click on the triangle by the 'OpenFlow Protocol' line in the center section to expand the message fields.  Click the triangle by Switch Features to display datapath capabilities - feel free to explore.
+
+These messages include:
+
+{| style="color:black; background-color:#ffffff;" cellpadding="10" cellspacing="0" border="1"
+|Message
+|Type
+|Description
+|-
+|'''Hello'''
+|Controller->Switch
+|following the TCP handshake, the controller sends its version number to the switch.
+|-
+|'''Hello'''
+|Switch->Controller
+|the switch replies with its supported version number.
+|-
+|'''Features Request'''
+|Controller->Switch
+|the controller asks to see which ports are available.
+|-
+|'''Set Config'''
+|Controller->Switch
+|in this case, the controller asks the switch to send flow expirations.
+|-
+|'''Features Reply'''
+|Switch->Controller
+|the switch replies with a list of ports, port speeds, and supported tables and actions.
+|-
+|'''Port Status'''
+|Switch->Controller
+|enables the switch to inform that controller of changes to port speeds or connectivity.  Ignore this one, it appears to be a bug.
+|-
+|}
+
+
+Since all messages are sent over localhost when using Mininet, determining the sender of a message can get confusing when there are lots of emulated switches.  However, this won't be an issue, since we only have one switch.  The controller is at the standard OpenFlow port (6633), while the switch is at some other user-level port.
+
+== View OpenFlow Messages for Ping ==
+Now, we'll view messages generated in response to packets.
+
+Before that update your wireshark filter to ignore the echo-request/reply messages (these are used to keep the connection between the switch and controller alive):
+Type the following in your wireshark filter, then press apply:
+ of && (of.type != 3) && (of.type != 2)
+
+Run a ping to view the OpenFlow messages being used.  In the Mininet console:
+ mininet> h1 ping -c1 h2
+
+In the Wireshark window, you should see a number of new message types:
+
+{| style="color:black; background-color:#ffffff;" cellpadding="10" cellspacing="0" border="1"
+|Message
+|Type
+|Description
+|-
+|'''Packet-In'''
+|Switch->Controller
+|a packet was received and it didn't match any entry in the switch's flow table, causing the packet to be sent to the controller.
+|-
+|'''Packet-Out'''
+|Controller->Switch
+|controller send a packet out one or more switch ports.
+|-
+|'''Flow-Mod'''
+|Controller->Switch
+|instructs a switch to add a particular flow to its flow table.
+|-
+|'''Flow-Expired'''
+|Switch->Controller
+|a flow timed out after a period of inactivity.
+|}
+
+
+First, you see an ARP request miss the flow table, which generates a broadcast Packet-Out message.  Next, the ARP response comes back; with both MAC addresses now known to the controller, it can push down a flow to the switch with a Flow-Mod message.  The switch does then pushes flows for the ICMP packets.  Subsequent ping requests go straight through the datapath, and should incur no extra messages; with the flows connecting h1 and h2 already pushed to the switch, there was no controller involvement.
+
+Re-run the ping, again from the Mininet console (hitting up is sufficient - the Mininet console has a history buffer):
+ mininet> h1 ping -c1 h2
+
+If the ping takes the same amount of time, run the ping once more; the flow entries may have timed out while reading the above text.
+
+This is an example of using OpenFlow in a ''reactive'' mode, when flows are pushed down in response to individual packets.
+
+Alternately, flows can be pushed down before packets, in a ''proactive'' mode, to avoid the round-trip times and flow insertion delays.
+
+== Benchmark Controller w/iperf ==
+'''iperf''' is a command-line tool for checking speeds between two computers.  
+
+Here, you'll benchmark the reference controller; later, you'll compare this with the provided hub controller, and your flow-based switch (when you've implemented it).
+
+In the mininet console run :
+ mininet> iperf
+
+This Mininet command runs an iperf TCP server on one virtual host, then runs an iperf client on a second virtual host.  Once connected, they blast packets between each other and report the results.
+
+Now compare with the user-space switch.  In the mininet console:
+ mininet> exit
+
+Start the same Mininet with the user-space switch:
+ $ sudo mn --topo single,3 --mac --controller remote --switch user
+
+Run one more iperf test with the reference controller:
+ mininet> iperf
+
+See a difference?  With the user-space switch, packets must cross from user-space to kernel-space and back on every hop, rather than staying in the kernel as they go through the switch.  The user-space switch is easier to modify (no kernel oops'es to deal with), but slower for simulation.
+
+Exit Mininet:
+ mininet> exit
