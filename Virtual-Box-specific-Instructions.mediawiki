@@ -1,0 +1,100 @@
+== VirtualBox Networking ==
+The easiest way to ssh into a VirtualBox VM is to use a '''host-only''' network interface, as we suggest.
+
+To allow network access in the VM, execute:
+ sudo dhclient eth1
+which grabs an IP address.  If eth1 is a '''host-only''' network interface, you are all set and should be able to ssh to eth1's IP address from your host.
+
+Otherwise, you can change the default, NAT interface as shown below and execute ''sudo dhclient eth0''.
+
+In order to log in via a NAT interface, we need to set up port forwarding. This may also enable users on your LAN to log in to the VM, which you may or may not want.
+
+'''OS X / Linux Users''' Run the VBoxManage commands below from a local terminal (not the VM window).
+
+'''Windows Users''' If you are using Windows Vista, first close Virtual box, to ensure that config files aren't locked.  Then open a command line prompt, by click on 'Start', then 'Run', then typing 'cmd' and hitting enter.  In the terminal that appears, change to the VirtualBox directory:
+ cd "C:\Program Files\Sun\xVM VirtualBox"
+
+'''All OSes''':
+From a terminal on your local machine (NOT the VM/VirtualBox), run: 
+
+ VBoxManage setextradata OpenFlowTutorial "VBoxInternal/Devices/pcnet/0/LUN#0/Config/ssh/HostPort" 2222
+ VBoxManage setextradata OpenFlowTutorial "VBoxInternal/Devices/pcnet/0/LUN#0/Config/ssh/GuestPort" 22
+ VBoxManage setextradata OpenFlowTutorial "VBoxInternal/Devices/pcnet/0/LUN#0/Config/ssh/Protocol" TCP
+Verify the settings:
+ VBoxManage getextradata OpenFlowTutorial enumerate
+The three values you added above should be shown.  
+
+Save your network settings for future reboots, by powering down the VM, from the VM window:
+ sudo poweroff
+
+Restart the OpenFlowTutorial VM once again, by clicking 'Start' at the top of VirtualBox.  Login again with the correct [[#Download Files | user name and password]].  
+
+'''Windows Users''' You may need to change the VM configuration.  Edit  /etc/network/interfaces.  Check that it says:
+ allow hot-plug eth1
+ iface eth1 inet dhcp
+If it says eth0, change it to eth1; note that to write the file you'll need to use sudo.  If you changed the interfaces file, poweroff the machine (sudo poweroff) and then start it again.
+
+== VirtualBox SSH Connections ==
+
+=== Mac OS X and Linux ===
+To SSH from the local machine to the VM, on the local machine run:
+ ssh -Y -l [[#Download Files | <user name>]] -p 2222 localhost
+with the correct [[#Download Files | user name and password]].  Test the X11 forwarding by running on the local machine:
+ xterm
+and a new terminal window should appear.  If you have succeeded, you are done with the basic setup.  Close the xterm.
+
+===Windows XP===
+Start Xming; nothing exciting will happen but it will show an icon on the right of the toolbar.
+
+Open a terminal: click 'Start', 'run', then enter 'cmd'.
+
+Change to the directory where you saved putty.  
+ cd <dir>
+Run: 
+ putty.exe -X -P 2222 -l <user name> localhost
+A new window will pop up; type in the password.  Now, type:
+ xterm
+A white terminal window should appear. If you have succeeded, you are done with the basic setup. Close the xterm.
+
+Make sure you use the correct [[#Download Files | user name and password]] for your VM image.
+
+<!--
+
+Sample solution:
+
+    def learn_and_forward(self, dpid, inport, packet, buf, bufid):
+        """Learn MAC src port mapping, then flood or send unicast."""
+        
+        # Initial hub behavior: flood packet out everything but input port.
+        # Comment out the line below when starting the exercise.
+        #self.send_openflow(dpid, bufid, buf, openflow.OFPP_FLOOD, inport)
+
+        # Starter psuedocode for learning switch exercise below: you'll need to
+        # replace each pseudocode line with more specific Python code.
+
+        # Learn the port for the source MAC
+        src = mac_to_int(packet.src)
+        dst = mac_to_int(packet.dst)
+        self.mac_to_port[src] = inport
+        if dst in self.mac_to_port:
+            # Send unicast packet to known output port
+            outport = self.mac_to_port[dst]
+            #self.send_openflow(dpid, bufid, buf, outport, inport)
+            # Later, only after learning controller works: 
+            # push down flow entry and remove the send_openflow command above.
+            attrs = {}
+            attrs[core.IN_PORT] = inport
+            attrs[core.DL_DST] = packet.dst
+            actions = [[openflow.OFPAT_OUTPUT, [0, outport]]]
+            self.install_datapath_flow(dp_id = dpid, attrs = attrs,
+                                       idle_timeout = 0, 
+                                       hard_timeout = 0,
+                                       actions = actions,
+                                       buffer_id = bufid,
+                                       priority=openflow.OFP_DEFAULT_PRIORITY,
+                                       inport=inport, packet=packet)
+        else:
+            #flood packet out everything but the input port
+            self.send_openflow(dpid, bufid, buf, openflow.OFPP_FLOOD, inport)
+
+-->
