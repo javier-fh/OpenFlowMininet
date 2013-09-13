@@ -1,0 +1,15 @@
+In this exercise, you'll modify your switch to reject connection attempts to specific ports, just like a firewall.
+
+This exercise is meant to show how OpenFlow can even do basic layer-4 tasks.  Other uses could even extend into layer 7; cookie-based load balancing, for example.
+
+== Testing your Firewall ==
+
+To run iperf on xterms, on the xterm for h2, start up a server:
+ $ iperf -s
+
+Then on the xterm for h3 start up a client:
+ $ iperf -c 10.0.0.2
+
+Your task is to prevent this from happening, and to block all flow entries with this particular port.
+
+You can change the port used by iperf with the -p option.  Both server and client will need this option specified.  Again, NOX core.py will be useful for figuring out how to specify a flow entry that matches on wildcard ports.  Also note that an empty action list will drop a packet; there's no explicit drop action.
