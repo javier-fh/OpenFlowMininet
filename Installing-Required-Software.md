@@ -1,0 +1,80 @@
+= Install Required Software =
+
+You will need to download these files individually.
+
+The files include virtualization software, a SSH-capable terminal, an X server, and the VM image.
+
+The tutorial image is distributed as a compressed VirtualBox image (vdi).  VirtualBox enables you to run a virtual machine inside a physical machine, and is free and available for Windows, Mac and Linux. You can export the VirtualBox image to vmdk format and use it with VMWare using the instructions below. 
+
+The following instructions assume the use of VirtualBox, but the instructions should apply regardless of virtual software after you complete the initial setup.
+
+== Download Files ==
+You'll need to download the files corresponding to your OS, plus the tutorial VM.  
+
+Start now with downloading a compressed VM image:
+
+* [https://github.com/downloads/mininet/mininet/mininet-2.0.0-113012-amd64-ovf.zip Virtual Machine Image (OVF format, 64-bit, Mininet 2.0)]
+
+<span style="color: red">'''Important: For this VM image, the user name is 'mininet' with password 'mininet'.'''</span>
+
+The OVF format can be imported into VirtualBox, VMware, or other popular virtualization programs.
+
+If this does not work for you, you can also try our older VM image that uses Mininet 1.0:
+
+* [http://www.openflow.org/downloads/OpenFlowTutorial-101311.zip VirtualBox VM Image (zipped VM image, 32-bit, Mininet 1.0)]
+
+<span style="color: red">'''Important: For this VM image, the user name is 'openflow' with password 'openflow'.'''</span>
+
+<!--
+* If you're using VirtualBox (which we assume you are for this tutorial) you will want the [http://openflowswitch.org/downloads/cs244-VM-0107.zip VirtualBox VM image].
+-->
+
+<!--
+ * If you already run VMware, you may wish to try the [http://openflowswitch.org/downloads/OpenFlowTutorial-081910.vmware.zip older VMware VM image].
+-->
+The download will take a while - it's on the order of 2GB in size.
+
+You will also need virtualization software, an X server, and an ssh-capable terminal emulator:
+
+{| style="color:black; background-color:#ffffff;" cellpadding="10" cellspacing="0" border="1"
+|OS Type
+|OS Version
+|Virtualization Software
+|X Server
+|Terminal
+|-
+|Windows
+|7+
+|[http://www.virtualbox.org/wiki/Downloads VirtualBox]
+|[http://sourceforge.net/project/downloading.php?group_id=156984&filename=Xming-6-9-0-31-setup.exe Xming]
+|[http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe PuTTY]
+|-
+|Windows
+|XP
+|[http://www.virtualbox.org/wiki/Downloads VirtualBox]
+|[http://sourceforge.net/project/downloading.php?group_id=156984&filename=Xming-6-9-0-31-setup.exe Xming]
+|[http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe PuTTY]
+|-
+|Mac
+|OS X 10.7-10.8 Lion/Mountain Lion
+|[http://www.virtualbox.org/wiki/Downloads VirtualBox]
+|download and install [http://xquartz.macosforge.org/trac/wiki XQuartz]
+|Terminal.app (built in)
+|-
+|Mac
+|OS X 10.5-10.6 Leopard/Snow Leopard
+|[http://www.virtualbox.org/wiki/Downloads VirtualBox]
+|X11 (install from OS X main system DVD, preferred), or download [http://xquartz.macosforge.org/trac/wiki XQuartz]
+|Terminal.app (built in)
+|-
+|Linux
+|Ubuntu 10.04+
+|[http://www.virtualbox.org/wiki/Downloads VirtualBox]
+|X server already installed
+|gnome terminal + SSH built in
+|}
+
+== Install and Verify ==
+
+After you have downloaded the appropriate software and VM images, 
+make sure that each column item (X server, Virtualization software, and SSH terminal) is installed and working for your platform, and that the VM image loads and runs correctly for your configuration.
