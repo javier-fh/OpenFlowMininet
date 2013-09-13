@@ -1,0 +1,143 @@
+NOTE: This part is still in beta, so be prepared that things could break down the road...
+
+In this exercise you'll use the code you have so far to control a slice of a real network  consisting of 3 OpenFlow switches, a server and a wireless client. 
+Your goal is to access a website and post a message. The interesting part is that your controller should allow traffic to go from client to server and vice versa.
+The setup includes:
+
+# 3 OpenFlow-enabled LinkSys Access Points.
+# FlowVisor ( to virtualize the network and create slices)
+# 1 controller/team
+# 1 Webserver
+# 1 Wireless device/team (could be your laptop's WiFi, your iPhone, Droid  etc)
+ 
+Ideally, you shouldn't write any code for this experiment. You will have to form teams though. When you are ready to start, ask the instructors to put you in a team.
+
+Here is the topology that we will use:
+
+[[File:Virtualized_layout_detail.png|center|thumb|500px]]
+
+
+
+==Setting up your Network==
+
+Here you'll work with a real network, so we won't use mininet. Go to your mininet console and type
+ mininet> exit
+
+
+You will have to deal with two network configurations.
+# The control network which will allow your controller to talk with the FlowVisor and OpenFlow switches (192.168.10. subnet).
+# The actual network we want to control, i.e. your wireless client to access the Web Server (10.0.0. subnet).
+
+===Control Network Configuration===
+
+* Ask the instructor for an ethernet cable. This will go to a standard (non-OpenFlow) switch and connects to the FlowVisor.
+* At your local machine, configure the interface where you plugged your ethernet cable with the following characteristics:
+ IP address : 192.168.10.X (where X = 100+TeamIndex, e.g. X=101 for Team1)
+ Netmask : 255.255.255.0
+
+For Linux you'll have to do something like :
+ $ sudo ifconfig eth0 192.168.10.X netmask 255.255.255.0
+
+For MAC
+ $ sudo ifconfig en0 192.168.10.X netmask 255.255.255.0
+
+For Windows
+ Go to your Control Panel->Network Settings and configure your LAN device.
+
+
+Now your local machine can access FlowVisor. To verify, ping FlowVisor from a terminal on your local machine:
+ ping 192.168.10.1
+
+But what we really need is the guest VM - where the controller is - to be able to communicate with the FlowVisor.
+We will use port-forwarding to do that.
+
+First, note the IP address of your VM guest. At your VM's shell, type:
+ $ ifconfig eth1
+
+Now, we need to configure port-forwarding.
+
+====Linux and Mac users====
+From your local machine:
+ ssh openflow@<guestIP> -L192.168.10.X:6633:<guestIP>:6633
+where <guestIP> is the IP address of the eth1 interface of the VM, and X is 100 + your team number.
+
+====Windows users====
+
+To enable port forwarding on the Putty, please enter the appropriate fields during connection setup
+
+
+[[File:Putty_port_fwding.PNG]]
+
+===Verify reachability===
+
+To verify that everything worked, use tcpdump at your guest VM and see whether you receive any incoming OpenFlow-related packets 
+ $ sudo tcpdump -i lo port 6633
+Note: The reason we specify the interface 'lo' not 'eth1' here is that SSH port forwarding arrives to the interface eth1 tcp port 22 and forwarded to the local interface 'lo' tcp port 6633.
+
+Due to reconnection backoff, it might take up to one minute before you see any packets coming in. If you don't get any packets after 1 minute, ask one of the instructors for help.
+
+===Wireless Client Configuration===
+
+You will have to configure your wireless client's network interface. First login to the wireless network with SSID "OpenFlow-Tutorial". Depending on your OS use ControlPanel/ifconfig or any other similar utility :
+
+For Linux:
+ $ sudo ifconfig wlan0 10.0.0.X netmask 255.255.255.0
+
+For Mac:
+ $ sudo ifconfig en1 10.0.0.X netmask 255.255.255.0
+
+(Or configure it using Network Preferences.)
+
+For Windows, go to Control Panel->Network Settings and configure it manually.
+
+Write down your wireless card MAC address. We'll use this shortly.
+
+Try to ping the WebServer at 10.0.0.1. Does it work? If not, why?
+
+==FlowVisor Configuration==
+
+Several teams will be using the same switches at the same time, so we have to virtualize our network and give each team a separate slice.
+Each controller will have a limited view of the network, as this is dictated by its slice configuration. In this exercise, each team will control all the traffic that comes from and goes to its wireless client.
+To do that we will need the MAC address of your team's wireless client.  Hopefully you already have this from the previous step.
+Give this MAC address to the instructor to update your slice configuration at the FlowVisor.
+
+Here is how a slice definition looks at the flowvisor configuration :
+
+ Name: team1
+ ID: 1
+ Host: tcp:192.168.10.101:6633
+ 
+ FlowSpace: allow: dl_src: 00:22:41:66:13:1c
+ FlowSpace: allow: dl_dst: 00:22:41:66:13:1c
+
+Note that 192.168.10.101:6633 points to this slice's OF controller, 00:22:41:66:13:1c is the MAC address of the wireless client, and every packet with that ethernet_src or ethernet_dst is assigned to this controller.
+
+For more details on FlowVisor, look at the wikipage.
+
+== Run your controller ==
+
+Go to your directory and start your controller.
+
+ $ cd ~/noxcore/build/src/
+ $ ./nox_core -i ptcp: -v pytutorial
+
+What do you see? Are there any switches connecting to your controller? Use your debug messages or wireshark for that.
+
+== Accessing the WebServer ==
+
+By now, you should have a functional network between your client and the webserver.
+
+Try again to ping the server:
+ $ ping 10.0.0.1
+
+Does it work now? How packets travel from client to the server? Check the switch flow-tables using dpctl.
+
+ $ dpctl dump-flows tcp:192.168.10.X (X=11,12,13)
+
+What do you see? Do you recognize all flows?
+
+If ping works, you are ready to go to the final step. 
+Fire your browser and go to http://10.0.0.1:8000
+Write and post a short message and make sure you fill your team's number.
+
+Look what others said at http://10.0.0.1:8000/posts
