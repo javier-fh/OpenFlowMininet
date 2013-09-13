@@ -1,0 +1,848 @@
+Now, let's move on building a networking application. We provide you with starter code for a hub controller. After getting yourself familiar with it, you'll modify the provided hub to act as an L2 learning switch.  In this application, the switch will examine each packet and learn the source-port mapping.  Thereafter, the source MAC address will be associated with the port.  If the destination of the packet is already associated with some port, the packet will be sent to the given port, else it will be flooded on all ports of the switch.
+
+Later, you'll turn this into a flow-based switch, where seeing a packet with a known source and dest causes a flow entry to get pushed down.
+
+For this tutorial you will need to choose a controller platform to build on top of.  The best option is likely the controller written in the language you are most familiar with.  Plus, after making your controller, rewriting it on another controller platform should go quickly and be a useful exercise.  Your options are:
+
+* '''Java''': [[#Controller Choice: Beacon (Java)|Beacon]], [[#Controller Choice: Floodlight (Java)|Floodlight]]
+* '''Python''': [[#Controller Choice: POX (Python)|POX]], [[#Controller Choice: Ryu (Python)|Ryu]], [[#Controller Choice: NOX w/Python|NOX (Deprecated)]]
+* '''Ruby''': [[#Controller Choice: Trema (Ruby)|Trema]]
+
+==Controller Choice: POX (Python) ==
+
+''' NOTE: The POX version of the tutorial is quite new, and feedback on the pox-dev mailing list is very welcome! '''
+
+One option for the first exercise is to use POX.  POX is a Python-based SDN controller platform geared towards research and education.  For more details on POX, see [http://www.noxrepo.org/pox/about-pox/ About POX] or [http://www.noxrepo.org/pox/documentation/ POX Documentation] on [http://www.noxrepo.org NOXRepo.org].
+
+We're not going to be using the reference controller anymore, which may still be running (do '<code>ps -A | grep controller</code>' if you're unsure), so you should either press Ctrl-C in the window running the controller program, or kill it from the other SSH window:
+ $ sudo killall controller
+
+You should also run <code>sudo mn -c</code> and restart Mininet to make sure that everything is "clean" and using the faster kernel switch. From your Mininet console:
+ mininet> exit
+ $ sudo mn -c
+ $ sudo mn --topo single,3 --mac --switch ovsk --controller remote
+
+You then need to download the POX code from the [https://github.com/noxrepo/pox POX repository on github] into your VM:
+ $ git clone http://github.com/noxrepo/pox
+ $ cd pox
+
+: '''OPTIONAL''': The above should get you the latest release branch of POX.  If you like the bleeding edge, you might like to switch to the latest development branch.  This is documented on the POX website, but as of this writing, it's the "betta" branch:
+: <tt>$ git checkout betta</tt>
+
+Now you can try running a basic hub example:
+ $./pox.py log.level --DEBUG misc.of_tutorial
+
+This tells POX to enable verbose logging and to start the of_tutorial component which you'll be using (which currently acts like a hub).
+
+The switches may take a little bit of time to connect.   When an OpenFlow switch loses its connection to a controller, it will generally increase the period between which it attempts to contact the controller, up to a maximum of 15 seconds.  Since the OpenFlow switch has not connected yet, this delay may be anything between 0 and 15 seconds.   If this is too long to wait, the switch can be configured to wait no more than N seconds using the --max-backoff parameter.  Alternately, you exit Mininet to remove the switch(es), start the controller, and then start Mininet to immediately connect.
+
+Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, POX will print something like this: 
+ INFO:openflow.of_01:[Con 1/1] Connected to 00-00-00-00-00-01
+ DEBUG:samples.of_tutorial:Controlling [Con 1/1]
+ 
+The first line is from the portion of POX that handles OpenFlow connections.  The second is from the tutorial component itself.
+
+=== Verify Hub Behavior with tcpdump ===
+
+Now we verify that hosts can ping each other, and that all hosts see the exact same traffic - the behavior of a hub.  To do this, we'll create xterms for each host and view the traffic in each.  In the Mininet console, start up three xterms:
+ mininet> xterm h1 h2 h3
+
+Arrange each xterm so that they're all on the screen at once.  This may require reducing the height of to fit a cramped laptop screen.
+
+In the xterms for h2 and h3, run <code>tcpdump</code>, a utility to print the packets seen by a host:
+ # tcpdump -XX -n -i h2-eth0
+
+and respectively:
+ # tcpdump -XX -n -i h3-eth0
+
+In the xterm for h1, send a ping:
+ # ping -c1 10.0.0.2
+
+The ping packets are now going up to the controller, which then floods them out all interfaces except the sending one.   You should see identical ARP and ICMP packets corresponding to the ping in both xterms running tcpdump.  This is how a hub works; it sends all packets to every port on the network.
+
+Now, see what happens when a non-existent host doesn't reply.  From h1 xterm:
+ # ping -c1 10.0.0.5
+
+You should see three unanswered ARP requests in the tcpdump xterms.  If your code is off later, three unanswered ARP requests is a signal that you might be accidentally dropping packets.
+
+You can close the xterms now.
+
+=== Benchmark Hub Controller w/iperf ===
+Here, you'll benchmark the provided of_tutorial hub.
+
+First, verify reachability.  Mininet should be running, along with the POX hub in a second window.  In the Mininet console, run:
+ mininet> pingall
+
+This is just a sanity check for connectivity.  Now, in the Mininet console, run:
+ mininet> iperf
+
+Now, compare your number with the reference controller you saw before. How does that compare?
+
+Hint: every packet goes up to the controller now.
+
+=== Open Hub Code and Begin ===
+Go to your SSH terminal and stop the tutorial hub controller using Ctrl-C.
+The file you'll modify is '''pox/misc/of_tutorial.py'''.  Open this file in your favorite editor.
+
+The current code calls act_like_hub() from the handler for packet_in messages to implement switch behavior.  You'll want to switch to using the act_like_switch() function, which contains a sketch of what your final learning switch code should look like.
+
+Each time you change and save this file, make sure to restart POX, then use pings to verify the behavior of the combination of switch and controller as a (1) hub, (2)  controller-based Ethernet learning switch, and (3) flow-accelerated learning switch.  For (2) and (3), hosts that are not the destination for a ping should display no tcpdump traffic after the initial broadcast ARP request.
+
+=== Learning Python ===
+This section introduces Python, giving you just enough to be dangerous.
+
+Python:
+* is a dynamic, interpreted language.  There is no separate compilation step - just update your code and re-run it.
+* uses indentation rather than curly braces and semicolons to delimit code.  Four spaces denote the body of a for loop, for example.
+* is dynamically typed.  There is no need to pre-declare variables and types are automatically managed.
+* has built-in hash tables, called dictionaries, and vectors, called lists.
+* is object-oriented and introspective.  You can easily print the member variables and functions of an object at runtime.
+* runs slower than native code because it is interpreted.  Performance-critical controllers may want to distribute processing to multiple nodes or switch to a more optimized language.
+
+Common operations:
+
+To initialize a dictionary:
+ mactable = {}
+To add an element to a dictionary:
+ mactable[0x123] = 2
+To check for dictionary membership:
+ if 0x123 in mactable:
+     print 'element 2 is in mactable'
+ if 0x123 not in mactable:
+     print 'element 2 is not in mactable'
+To print a debug message in POX:
+ log.debug('saw new MAC!')
+To print an error message in POX:
+ log.error('unexpected packet causing system meltdown!')
+To print all member variables and functions of an object:
+ print dir(object)
+To comment a line of code:
+ # Prepend comments with a #; no // or /**/
+
+More Python resources:
+* [http://docs.python.org/lib/built-in-funcs.html List of built-in functions] 
+* [http://docs.python.org/tutorial/ Official Python tutorial]
+
+The subsections below give details about POX APIs that should prove useful in the exercise.  There is also other documentation available in the [http://www.noxrepo.org/pox/documentation/ appropriate section of POX's website]. 
+
+=== Sending OpenFlow messages with POX ===
+
+ connection.send( ... ) # send an OpenFlow message to a switch
+
+When a connection to a switch starts, a ConnectionUp event is fired.  The example code creates a new Tutorial object that holds a reference to the associated Connection object.  This can later be used to send commands (OpenFlow messages) to the switch.
+
+==== ofp_action_output class ====
+
+This is an action for use with ofp_packet_out and ofp_flow_mod.  It specifies a switch port that you wish to send the packet out of.  It can also take various "special" port numbers.  An example of this would be OFPP_FLOOD which sends the packet out all ports except the one the packet originally arrived on.
+
+Example.  Create an output action that would send packets to all ports:
+ out_action = of.ofp_action_output(port = of.OFPP_FLOOD)
+
+==== ofp_match class ====
+
+Objects of this class describe packet header fields and an input port to match on.  All fields are optional -- items that are not specified are "wildcards" and will match on anything.
+
+Some notable fields of ofp_match objects are:
+* dl_src - The data link layer (MAC) source address
+* dl_dst - The data link layer (MAC) destination address
+* in_port - The packet input switch port
+
+Example.  Create a match that matches packets arriving on port 3:
+ match = of.ofp_match()
+ match.in_port = 3
+
+==== ofp_packet_out OpenFlow message ====
+
+The ofp_packet_out message instructs a switch to send a packet.  The packet might be one constructed at the controller, or it might be one that the switch received, buffered, and forwarded to the controller (and is now referenced by a buffer_id).
+
+Notable fields are:
+*buffer_id - The buffer_id of a buffer you wish to send.  Do not set if you are sending a constructed packet.
+*data - Raw bytes you wish the switch to send.  Do not set if you are sending a buffered packet.
+* actions - A list of actions to apply (for this tutorial, this is just a single ofp_action_output action).
+* in_port - The port number this packet initially arrived on if you are sending by buffer_id, otherwise OFPP_NONE.
+
+Example. of_tutorial's send_packet() method:
+  def send_packet (self, buffer_id, raw_data, out_port, in_port):
+    """
+    Sends a packet out of the specified switch port.
+    If buffer_id is a valid buffer on the switch, use that.  Otherwise,
+    send the raw data in raw_data.
+    The "in_port" is the port number that packet arrived on.  Use
+    OFPP_NONE if you're generating this packet.
+    """
+    msg = of.ofp_packet_out()
+    msg.in_port = in_port
+    if buffer_id != -1 and buffer_id is not None:
+      # We got a buffer ID from the switch; use that
+      msg.buffer_id = buffer_id
+    else:
+      # No buffer ID from switch -- we got the raw data
+      if raw_data is None:
+        # No raw_data specified -- nothing to send!
+        return
+      msg.data = raw_data
+    
+    action = of.ofp_action_output(port = out_port)
+    msg.actions.append(action)
+    
+    # Send message to switch
+    self.connection.send(msg)
+
+==== ofp_flow_mod OpenFlow message ====
+
+This instructs a switch to install a flow table entry.  Flow table entries match some fields of incoming packets, and executes some list of actions on matching packets.  The actions are the same as for ofp_packet_out, mentioned above (and, again, for the tutorial all you need is the simple ofp_action_output action).  The match is described by an ofp_match object.
+
+Notable fields are:
+* idle_timeout - Number of idle seconds before the flow entry is removed.  Defaults to no idle timeout.
+* hard_timeout - Number of seconds before the flow entry is removed.  Defaults to no timeout.
+* actions - A list of actions to perform on matching packets (e.g., ofp_action_output)
+* priority - When using non-exact (wildcarded) matches, this specifies the priority for overlapping matches.  Higher values are higher priority.  Not important for exact or non-overlapping entries.
+* buffer_id - The buffer_id of a buffer to apply the actions to immediately.  Leave unspecified for none.
+* in_port - If using a buffer_id, this is the associated input port.
+* match - An ofp_match object.  By default, this matches everything, so you should probably set some of its fields!
+
+Example.  Create a flow_mod that sends packets from port 3 out of port 4.
+ fm = of.ofp_flow_mod()
+ fm.match.in_port = 3
+ fm.actions.append(of.ofp_action_output(port = 4))
+
+For more information about OpenFlow constants, see the main OpenFlow types/enums/structs file, '''openflow.h''', in ~/openflow/include/openflow/openflow.h
+You may also wish to consult POX's OpenFlow library in pox/openflow/libopenflow_01.py and, of course, the OpenFlow 1.0 Specification.
+
+=== Parsing Packets with the POX packet libraries ===
+
+The POX packet library is used to parse packets and make each protocol field available to Python.  This library can also be used to construct packets for sending.
+
+The parsing libraries are in:
+ pox/lib/packet/
+
+Each protocol has a corresponding parsing file.
+
+For the first exercise, you'll only need to access the Ethernet source and destination fields.  To extract the source of a packet, use the dot notation:
+ packet.src
+
+The Ethernet src and dst fields are stored as pox.lib.addresses.EthAddr objects.  These can easily be converted to their common string representation (<code>str(addr)</code> will return something like "01:ea:be:02:05:01"), or created from their common string representation (<code>EthAddr("01:ea:be:02:05:01")</code>).
+
+To see all members of a parsed packet object:
+ print dir(packet)
+Here's what you'd see for an ARP packet:
+ ['HW_TYPE_ETHERNET', 'MIN_LEN', 'PROTO_TYPE_IP', 'REPLY', 'REQUEST', 'REV_REPLY',
+  'REV_REQUEST', '__class__', '__delattr__', '__dict__', '__doc__', '__format__',
+  '__getattribute__', '__hash__', '__init__', '__len__', '__module__', '__new__',
+  '__nonzero__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__',
+  '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_init', 'err',
+  'find', 'hdr', 'hwdst', 'hwlen', 'hwsrc', 'hwtype', 'msg', 'next', 'opcode',
+  'pack', 'parse', 'parsed', 'payload', 'pre_hdr', 'prev', 'protodst', 'protolen',
+  'protosrc', 'prototype', 'raw', 'set_payload', 'unpack', 'warn']
+Many fields are common to all Python objects and can be ignored, but this can be a quick way to avoid a trip to a function's documentation.
+
+Now, skip ahead to Testing Your Controller below.
+
+== Controller Choice: Beacon (Java) ==
+Beacon is a Java-based OpenFlow controller platform.  For more details and tutorials see the [http://www.beaconcontroller.net Beacon Homepage]. 
+
+Beacon is very easily developed using the Eclipse Integrated Development Environment which runs on any operating system (OS).
+
+'''<span style="color:red">Therefore, for this tutorial you will you need to download Beacon and run Eclipse on your host machine, rather than inside the Mininet virtual machine.</span>'''
+
+The next section will help you do that.
+
+=== Setting up a Beacon Development Environment ===
+
+This section is a modified copy of the [https://openflow.stanford.edu/display/Beacon/Quick+Start original] Beacon quick-start guide.
+
+==== Prerequisites ====
+
+You will need the following installed in your '''host machine''' :
+
+* [http://java.sun.com/javase/downloads/widget/jdk6.jsp Java 6 JDK & JRE] (Java 7 JDK is fine on OSX)
+
+Next, download the Beacon tutorial package for your '''host machine's operating system''', the file names begin with beacon-tutorial-eclipse:
+
+* [https://openflow.stanford.edu/static/beacon/releases/1.0.2/ Tutorial Packages]
+
+After the download is complete extract it to your desktop, or somewhere else that is convenient. For guide purposes, the folder you extracted it to will be referred to by <path to>/beacon-tutorial-1.0.2
+
+==== Setup ====
+Launch Eclipse by running the eclipse executable inside <path to>/beacon-tutorial-1.0.2/eclipse/
+
+(Optional) Create a new Eclipse workspace if you are not starting from a fresh Eclipse install
+
+* File -> Switch Workspace -> Other, pick a new folder to host the workspace
+
+Set Eclipse's compliance level to 1.6
+
+* Window (or Eclipse for MAC) -> Preferences -> Java -> Compiler then under JDK Compliance, change Compiler compliance level to 1.6.
+
+Import Beacon and OpenFlowJ projects
+
+* File -> Import -> General -> Existing Projects into Workspace, Select <path to>/beacon-tutorial-1.0.2/beacon-tutorial-1.0.2/src as the root directory, click ok, then select all the projects, ensure copy projects into workspace is not checked and click finish.
+
+'''''Note at this point you will see many Java errors, the libraries Beacon depends on will be installed in the next step which will resolve the errors, do not panic!'''''
+
+Set the target (download libraries)
+
+* Open the Beacon Main Target project, double click the main-local.target file.
+* Click Set as Target Platform in the top right corner of the main.target window. (Note if you click before it has been resolved, you will receive an error). Wait a few seconds, at this point all compilation errors should be gone.
+
+Import the Beacon code style settings
+
+* Click Window -> Preferences. Then in the left column click Java -> Code Style -> Formatter, then click the Import button, and select <path to>/beacon-tutorial-1.0.2/src/beacon-1.0.2/beacon_style_settings.xml and hit ok, then ensure the Active profile is Beacon.
+
+That's it! Your Beacon controller is ready to rock'n'roll.
+
+=== Running the Tutorial Controller ===
+
+Back in your VM, We're not going to be using the reference controller anymore, which is running in the background (do 'ps -A | grep controller' if you're unsure). 
+
+The switches are all trying to connect to a controller, and will increase the period of their attempts to contact the controller, up to a maximum of 15 seconds.  Since the OpenFlow switch has not connected yet, this delay may be anything between 0 and 15 seconds.   If this is too long to wait, the switch can be configured  to wait no more than N seconds using the --max-backoff parameter.
+
+Make sure the reference controller used before is not running:
+ $ sudo killall controller
+
+You will need to tell the Mininet virtual switches to connect to your host machine's IP address.  To get that, from your Mininet ssh window run the command sudo route:
+
+ openflow@openflowtutorial:~$ sudo route
+ Kernel IP routing table
+ Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+ 192.168.206.0   *               255.255.255.0   U     0      0        0 eth0
+ default         192.168.206.2   0.0.0.0         UG    0      0        0 eth0
+
+Look for the line that starts with default, and typically your host's IP address will be the IP in the Gateway column.  If that IP address ends with .1, and later you are unable to connect Mininet to Beacon, try the same IP but swapping the ending .1 with .2.
+
+You should also restart Mininet to make sure that everything is "clean". From your Mininet console:
+ mininet> exit
+ $ sudo mn --topo single,3 --mac --switch ovsk --controller remote,ip=<your_host_ip>
+
+Make sure you do not add extra spaces around the comma.
+
+Note: The above syntax is for Mininet 2.0 - for Mininet 1.0, use the following syntax instead:
+ $ sudo mn --topo single,3 --mac --switch ovsk --controller remote --ip <your_host_ip>
+
+The ip parameter defines in which IP your controller is located. Note that this is the IP your host uses to communicate with the VM, as discussed above. In my case, the VM's IP is 192.168.206.4 and the host's IP is 192.168.206.2 . Thus, I started mininet using
+ $ sudo mn --topo single,3 --mac --switch ovsk --controller remote,ip=192.168.206.2
+
+
+Now it's time to start Beacon. 
+
+Launching Beacon from Eclipse in debug mode
+
+* Run -> Debug Configurations
+* Look for the OSGi Framework on the left, expand its children and select 'beacon Tutorial LearningSwitch', then click Debug.
+
+This command will start Beacon, including the 'tutorial' bundle, listening to incoming connection from switches on the standard OpenFlow port (6633).
+
+Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, your Eclipse console should print something like this: 
+
+01:07:31.095 [pool-2-thread-2] INFO  n.b.core.internal.Controller - Switch connected from java.nio.channels.SocketChannel[connected local=/192.168.206.2:6633 remote=/192.168.206.4:54994]
+
+=== Verify Hub Behavior with tcpdump ===
+
+Now we verify that hosts can ping each other, and that all hosts see the exact same traffic - the behavior of a hub.  To do this, we'll create xterms for each host, and view the traffic in each.  In the Mininet console, start up three xterms:
+ mininet> xterm h1 h2 h3
+
+Arrange each xterm so that they're all on the screen at once.  This may require reducing the height of to fit a cramped laptop screen.
+
+In the xterms for h2 and h3, run tcpdump, a utility to print the packets seen by a host:
+ # tcpdump -XX -n -i h2-eth0
+
+and respectively:
+ # tcpdump -XX -n -i h3-eth0
+
+In the xterm for h1, send a ping:
+ # ping -c1 10.0.0.2
+
+The ping packets are now going up to the controller, which then floods them out all interfaces except the sending one.   You should see identical ARP and ICMP packets corresponding to the ping in both xterms running tcpdump.
+
+Now, see what happens when a non-existent host doesn't reply.  From h1 xterm:
+ # ping -c1 10.0.0.5
+
+You should see three unanswered ARP requests in the tcpdump xterms.  If your code is off later, three unanswered ARP requests is a signal that you might be accidentally dropping packets.
+
+You can close the xterms now.
+
+=== Benchmark Hub Controller w/iperf ===
+Here, you'll benchmark the provided hub code, part of the Tutorial bundle.
+
+First, verify reachability.  Mininet should be running, along with your Beacon tutorial controller.  In the Mininet console, run:
+ mininet> pingall
+
+This is just a sanity check for connectivity.  Now, in the Mininet console, run:
+ mininet> iperf
+
+Now, compare your number with the reference controller you saw before. How does that compare?
+
+=== Open Tutorial Code and Begin ===
+
+Go to Eclipse and stop Beacon (you should see a square, red button in the console window, or the top left section of Eclipse if you are in the Debug perspective).
+
+'''NOTE : You can run only one controller at the same time (otherwise you'll get a port conflict). Make sure that you stop any running instance of Beacon before you start another one. With Eclipse this might be tricky. To check the running programs open the Debug perspective (Window->Open Perspective->Debug). On the top-left corner you can see the running programs, click on it then hit the red square to terminate the redundant ones...'''
+
+{| class="wikitable"
+| [[File:Eclipse_console_stop.png|none|thumb|200px]]
+| [[File:Eclipse_debug_stop.png|none|thumb|200px]]
+|}
+
+The file you'll modify is '''net.beaconcontroller.tutorial/src/main/java/net/beaconcontroller/tutorial/LearningSwitchTutorial.java'''.  Find this file in the left pane of Eclipse and double-click it to open it in the editor window.
+
+Take a quick look through the file, the key things to notice:
+* The receive method is where packets initially arrive from switches, by default this method calls forwardAsHub.  Once you have implemented the code in forwardAsLearningSwitch you should change receive by commenting out the call to forwardAsHub, and uncommenting the call to forwardAsLearningSwitch.
+* The forwardAsHub method behaves as a broadcast hub, and has code that gives you an example of how to send an OFPacketOut message.
+* The forwardAsLearningSwitch method is where you will be writing all of your code (with the exception of the receive method mentioned earlier).  It should take you around 30 lines of code in this method to implement a learning switch.
+
+Wireshark will be very useful to you in getting your code working.  Try starting Beacon and doing some pings with Mininet while capturing with Wireshark.  You should see OFPacketIn and OFPacketOut messages, and if you explore the OFPacketOut messages you should see their action is to flood.
+
+Each time you change and save the LearningSwitchTutorial file, make sure to stop and start your running instance, then use pings to verify hub or Ethernet learning switch behavior.  Hosts that are not the destination should display no tcpdump traffic after the initial broadcast ARP request.
+
+There is a significant number of comments in the LearningSwitchTutorial file to help you create the proper functionality, and tips provided in the subsequent sections of this tutorial ('''read these!''').  At a high level there are two phases of work for you to do.
+
+==== Phase 1 ====
+* Build an OFMatch object based on the incoming OFPacketIn
+* Learn that the source MAC address is at the incoming port and store it in the Map
+* Retrieve the port the destination MAC address is at, if it is known
+* If the destination port is known, send an OFPacketOut directly and only to that port, else forward using the flooding method in the forwardAsHub method
+
+At the end of this phase you should be able to send pings back and forth, and in Wireshark you should see an initial OFPacketOut in both directions with its action set to flood, subsequent OFPacketOut messages should have their action set to send to a single port.
+
+==== Phase 2 ====
+* If the destination port is known, instead of sending an OFPacketOut, send an OFFlowMod so that subsequent pings are matched on the switch.
+
+At the end of phase 2, when pinging and viewing the controller traffic in Wireshark you should see an initial OFPacketOut that floods for the request/response, then an OFFlodMod being sent for both request/response, then no further traffic for the same ping.
+
+=== Learning Java and Beacon ===
+
+Here are a few Java tips you might find useful down the road.
+
+To add an element to a HashMap:
+ macTable.put(mac_address_key, port)
+
+To convert a MAC address in a byte[] to a Long:
+ Ethernet.toLong(match.getDataLayerSource()/match.getDataLayerDestination())
+
+To check for an element in your HashMap:
+ if (macTable.containsKey(mac_address_key))
+    log.debug("mac_address_key is in hashmap")
+
+To get an element from the HashMap:
+ learned_port = macTable.get(mac_address_key)
+    
+To print a debug message in Beacon:
+ log.debug("Learned new MAC!")
+
+You can change the logging level using info or error instead of debug.
+
+The subsections below give details about a few Beacon Classes that should prove useful in the exercise.
+
+=== Useful Beacon Classes ===
+
+In your beacon-tutorial-1.0.2 directory, there is an apidocs folder which contains Javadoc documentation for all essential classes in this assignment.
+Open your browser and point to <your beacon-tutorial-1.0.2 directory>/apidocs/index.html and look for the classes mentioned below, which should help while implementing your code.
+
+To send a message to an OpenFlow switch, look at IOFSwitch class. The starter forward_as_hub function sends packets out using:
+ sw.getOutputStream().write(po);
+
+Look at OFMatch and OFPacketIn to get header information from an OpenFlow packet-in. You should find the following command particularly useful:
+ match.loadFromPacket(pi.getPacketData(), pi.getInPort()); 
+
+Down the road, you may want to print a mac address, or use it as a key to a HashMap. OFMatch will give you the address as a byte array. Use the functions/classes below in case needed:
+ HexString.toHexString(byte[] bytes) // Convert a string of bytes to a ':' separated hex string
+ Long mac_address_key = Ethernet.toLong(byte array); // Creates a Long key from a byte array.
+
+Finally, at some  point you will have to install a flow in the network. Use OFFlowMod and OFActionOutput to do that. Here is a way to initialize a flow-mod message for a specific switch:
+ OFFlowMod fm = new OFFlowMod();
+
+Use the appropriate setters to construct the flow-mod you need. Assuming you know the outgoing port for this flow, this is a snippet on how to include this in your flow-mod message:
+ OFActionOutput action = new OFActionOutput(outPort);
+ fm.setActions(Collections.singletonList((OFAction)action));
+
+== Controller Choice: Floodlight (Java) ==
+
+Floodlight is a Java-based OpenFlow controller platform.  For more details and tutorials see the [http://www.projectfloodlight.org/floodlight FloodLight OpenFlowHub page]. 
+
+=== Install Prerequisites ===
+
+Note: these instructions are a customized version of those on the [http://www.projectfloodlight.org/download/ Floodlight Download page]
+
+Make sure that you have Internet access:
+ ping -c1 www.stanford.edu
+
+If not, ensure that each ethX interface on your VM has an IP assigned via DHCP:
+ ifconfig -a
+
+Run for each interface without an IP assigned, replacing ethX as necessary:
+ sudo dhclient ethX
+
+Update apt sources:
+ sudo apt-get update
+
+Install prereqs:
+ time sudo apt-get install build-essential default-jdk ant python-dev
+
+=== Getting Started ===
+
+While the dependencies are installing on your VM, follow the [http://www.projectfloodlight.org/getting-started/ Floodlight Getting Started instructions].
+
+=== Developing ===
+
+Once through with the getting started part, work through [http://docs.projectfloodlight.org/display/floodlightcontroller/How+to+Write+a+Module Developing on Floodlight.]
+
+==Controller Choice: Trema (Ruby)==
+
+Trema is a Ruby-based OpenFlow controller platform and testing environment.  For more details and tutorials see the [http://trema.github.com/trema/ Trema GitHub page]. 
+
+=== Install Prerequisites ===
+
+Make sure that you have Internet access:
+ ping -c1 www.stanford.edu
+
+If not, ensure that each ethX interface on your VM has an IP assigned via DHCP:
+ ifconfig -a
+
+Run for each interface without an IP assigned, replacing ethX as necessary:
+ sudo dhclient ethX
+
+Update apt sources:
+ sudo apt-get update
+
+Install prereqs:
+ sudo apt-get install rubygems1.8
+
+=== Getting Started ===
+
+Follow the instructions on the [http://trema.github.com/trema/ main Trema page], which has links to tutorial videos and more.
+
+== Controller Choice: Ryu (Python) ==
+
+Ryu is a python-based OpenFlow controller.
+For details, please visit the [http://osrg.github.com/ryu/ Ryu Official Site]
+
+=== Ryu VM Image ===
+The VM image set up for Ryu is available at
+
+* [http://people.valinux.co.jp/~yamahata/ryu/openflow-tutorial/OpenFlow_Tutorial_Ryu-ovf.zip Virtual Machine Image(zipped OVF format, 64-bit, Mininet 2.0)].
+This can be import into virtualbox, VMWare or other popular virtualization
+programs.
+
+<span style="color: red">'''
+Important: For this VM image, the user name is 'ryu' with password 'ryu'.
+'''</span>
+
+=== Supplement on VM Setup ===
+If you have troubles to connect into guest with ssh, please try
+* Add host-only network (If your virtual box is not so-new, the host-only network is already created by default. In that case, skip to the next step) file menu/Preferences/Network and "Add host-only network" button with default settings.
+
+* select your VM and go to the Setting Tab. Go to Network->Adapter 2. Select the "Enable Adapter" box and attach it to "host-only network" which was created at the step 1.
+
+=== Install Prerequisites ===
+You will need the following installed in your environment that runs Ryu
+* python-gevent>=0.13
+* python-routes
+* python-webob
+* python-paramiko
+
+Make sure that you have internet access:
+    ping -c www.stanford.edu
+
+If not, ensure that each ethX interface on your VM has an IP assigned via DHCP:
+    ifconfig -a
+
+Run for each interface without an IP assigned, replacing ethX as necessary:
+    sudo dhclient ethX
+
+update apt soruces:
+    sudo apt-get update
+
+install prereqs:
+    time sudo apt-get install python-gevent python-routes python-webob python-paramiko
+
+===Getting Started and developing===
+Please visit the [https://github.com/osrg/ryu/wiki/OpenFlow_Tutorial OpenFlow Tutorial page].
+
+== Controller Choice: NOX w/Python ==
+''' NOTE: The version of NOX used in this tutorial is no longer current.  In fact, all Python-based development in NOX is now deprecated.
+
+<span style="color: red;">DEVELOPERS WISHING TO USE PYTHON ARE ENCOURAGED TO USE POX INSTEAD.</span>''' 
+
+One option for the first exercise is to use  NOX, a controller platform that allows you to write a controller on top, in Python, C++, or some combination of the two. From [http://noxrepo.org noxrepo.org]:
+<blockquote> 
+NOX is an open-source platform that simplifies the creation of software for controlling or monitoring networks. Programs written within NOX (using either C++ or Python) have flow-level control of the network. This means that they can determine which flows are allowed on the network and the path they take.
+</blockquote>
+
+For more details, see the [http://www.noxrepo.org/support/about-nox/ NOX overview].
+
+If NOX classic is not already installed in your Mininet 2.0 VM, you can install it by typing
+  cd ~
+  mininet/util/install.sh -x
+
+This may take some time (20 minutes), so it is recommended that you do this in advance if you are planning to use NOX classic. The older Mininet 1.0 VM includes NOX classic.
+
+We're not going to be using the reference controller anymore, which is running in the background (do 'ps -A | grep controller' if you're unsure). 
+
+Make sure the reference controller used before is not running, so that NOX can use port 6633.  Press Ctrl-C in the window running the controller program, or in the other SSH window run:
+ $ sudo killall controller
+
+You should also run <code>sudo mn -c</code> and restart Mininet to make sure that everything is "clean" and using the faster kernel switch. From your Mininet console:
+ mininet> exit
+ $ sudo mn -c
+ $ sudo mn --topo single,3 --mac --switch ovsk --controller remote
+
+''' NOTE: The following usage instructions conforms perfectly with NOX Classic (bundled with Mininet 1.0 VM). However, there may be some minor variations with other versions.
+
+Go to the directory holding the built NOX executable (~/noxcore/build/src) in the other SSH window:
+ $ cd ~/nox/build/src
+
+Then, in the same window, start the base Python hub code:
+ $ ./nox_core -v -i ptcp: pytutorial
+
+This command told NOX to start the 'tutorial' application, to print verbose debug information, and to passively listen for new switch connections on the standard OpenFlow port (6633).
+
+The switches may take a little bit of time to connect.   When an OpenFlow switch loses its connection to a controller, it will generally increase the period between which it attempts to contact the controller, up to a maximum of 15 seconds.  Since the OpenFlow switch has not connected yet, this delay may be anything between 0 and 15 seconds.   If this is too long to wait, the switch can be configured to wait no more than N seconds using the --max-backoff parameter.  Alternately, you exit Mininet to remove the switch(es), start the controller, and then start Mininet to immediately connect.
+
+Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, NOX will print something like this: 
+ 00039|nox|DBG:Registering switch with DPID = 1
+
+If you see the switch print out a message like "sent error in response to capability reply, assuming no management support", this is OK.  Open vSwitch has custom extensions to support a management database, but we're not enabling them on our OpenFlow switch.
+
+=== Verify Hub Behavior with tcpdump ===
+
+Now we verify that hosts can ping each other, and that all hosts see the exact same traffic - the behavior of a hub.  To do this, we'll create xterms for each host and view the traffic in each.  In the Mininet console, start up three xterms:
+ mininet> xterm h1 h2 h3
+
+Arrange each xterm so that they're all on the screen at once.  This may require reducing the height of to fit a cramped laptop screen.
+
+In the xterms for h2 and h3, run <code>tcpdump</code>, a utility to print the packets seen by a host:
+ # tcpdump -XX -n -i h2-eth0
+
+and respectively:
+ # tcpdump -XX -n -i h3-eth0
+
+In the xterm for h1, send a ping:
+ # ping -c1 10.0.0.2
+
+The ping packets are now going up to the controller, which then floods them out all interfaces except the sending one.   You should see identical ARP and ICMP packets corresponding to the ping in both xterms running tcpdump.  This is how a hub works; it sends all packets to every port on the network.
+
+Now, see what happens when a non-existent host doesn't reply.  From h2 xterm:
+ # ping -c1 10.0.0.5
+
+You should see three unanswered ARP requests in the tcpdump xterms.  If your code is off later, three unanswered ARP requests is a signal that you might be accidentally dropping packets.
+
+You can close the xterms now.
+
+=== Benchmark Hub Controller w/iperf ===
+Here, you'll benchmark the provided hub.
+
+First, verify reachability.  Mininet should be running, along with the NOX tutorial in a second window.  In the Mininet console, run:
+ mininet> pingall
+
+This is just a sanity check for connectivity.  Now, in the Mininet console, run:
+ mininet> iperf
+
+Now, compare your number with the reference controller you saw before. How does that compare?
+
+Hint: every packet goes up to the controller now.
+
+=== Open Hub Code and Begin ===
+Go to your SSH terminal and stop the NOX hub controller using Ctrl-C.
+The file you'll modify is '''~/nox/src/nox/coreapps/tutorial/pytutorial.py'''.  Open this file in your favorite editor.
+
+Most of the code will go in one function, learn_and_forward().  There isn't much code here, yet it's sufficient to make a complete hub and serve as an example of a minimal NOX app.  You'll need to add roughly 10 lines to make a learning switch.
+
+Each time you change and save this file, make sure to restart NOX, then use pings to verify the behavior of the combination of switch and controller as a (1) hub, (2)  controller-based Ethernet learning switch, and (3) flow-accelerated learning switch.  For (2) and (3), hosts that are not the destination for a ping should display no tcpdump traffic after the initial broadcast ARP request.
+
+=== Learning Python ===
+This section introduces Python, giving you just enough to be dangerous.
+
+Python:
+* is a dynamic, interpreted language.  There is no separate compilation step - just update your code and re-run it.
+* uses indentation rather than curly braces and semicolons to delimit code.  Four spaces denote the body of a for loop, for example.
+* is dynamically typed.  There is no need to pre-declare variables and types are automatically managed.
+* has built-in hash tables, called dictionaries, and vectors, called lists.
+* is object-oriented and introspective.  You can easily print the member variables and functions of an object at runtime.
+* runs slower than native code because it is interpreted.  Performance-critical controllers may want to distribute processing to multiple nodes or switch to a more optimized language.
+
+Common operations:
+
+To initialize a dictionary:
+ mactable = {}
+To add an element to a dictionary:
+ mactable[0x123] = 2
+To check for dictionary membership:
+ if 0x123 in mactable:
+     print 'element 2 is in mactable'
+To print a debug message in NOX:
+ log.debug('saw new MAC!')
+To print an error message in NOX:
+ log.error('unexpected packet causing system meltdown!')
+To print all member variables and functions of an object:
+ print dir(object)
+To comment a line of code:
+ # Prepend comments with a #; no // or /**/
+
+More Python resources:
+* [http://docs.python.org/lib/built-in-funcs.html List of built-in functions] 
+* [http://docs.python.org/tutorial/ Official Python tutorial]
+
+The subsections below give details about NOX APIs that should prove useful in the exercise.
+
+
+=== Sending OpenFlow messages with NOX ===
+
+NOX API documentation can be found [http://noxrepo.org/~yapkke/doc/ here]. Please look there for the appropriate calls. 
+We also list a few functions here, that will be useful for your first steps into NOX.
+
+ Component.send_openflow( ... ) # send a packet out a port
+ Component.install_datapath_flow( ... ) # push a flow to a switch
+
+These functions, part of the core NOX API, are defined in /home/openflow/nox/src/nox/lib/core.py.  To save the need to look through this source code, the relevant documentation is below:
+
+====send_openflow( ... )====
+      def send_openflow(self, dp_id, buffer_id, packet, actions,
+                       inport=openflow.OFPP_CONTROLLER):
+         """
+         Sends an openflow packet to a datapath.
+ 
+         This function is a convenient wrapper for send_openflow_packet
+         and send_openflow_buffer for situations where it is unknown in
+         advance whether the packet to be sent is buffered.  If
+         'buffer_id' is -1, it sends 'packet'; otherwise, it sends the
+         buffer represented by 'buffer_id'.
+ 
+         dp_id - datapath to send packet to
+         buffer_id - id of buffer to send out
+         packet - data to put in openflow packet
+         actions - list of actions or dp port to send out of
+         inport - dp port to mark as source (defaults to Controller
+                  port)
+         """
+
+Here's an example use, from the pytutorial.py starter code:
+ self.send_openflow(dpid, bufid, buf, openflow.OFPP_FLOOD, inport)
+
+This code floods a packet cached at the switch (with the given bufid) out all ports but the input port.  Replace openflow.OFPP_FLOOD with a port number to send a packet packet out a specific port, unmodified.
+
+====install_datapath_flow( .... )====
+     def install_datapath_flow(self, dp_id, attrs, idle_timeout, hard_timeout,
+                               actions, buffer_id=None, 
+                               priority=openflow.OFP_DEFAULT_PRIORITY,
+                               inport=None, packet=None):
+         """
+         Add a flow entry to datapath
+ 
+         dp_id - datapath to add the entry to
+ 
+         attrs - the flow as a dictionary (described below)
+ 
+         idle_timeout - # idle seconds before flow is removed from dp
+ 
+         hard_timeout - # of seconds before flow is removed from dp
+ 
+         actions - a list where each entry is a two-element list representing
+         an action.  Elem 0 of an action list should be an ofp_action_type
+         and elem 1 should be the action argument (if needed). For
+         OFPAT_OUTPUT, this should be another two-element list with max_len
+         as the first elem, and port_no as the second
+ 
+         buffer_id - the ID of the buffer to apply the action(s) to as well.
+         Defaults to None if the actions should not be applied to a buffer
+ 
+         priority - when wildcards are present, this value determines the
+         order in which rules are matched in the switch (higher values
+         take precedence over lower ones)
+ 
+         packet - If buffer_id is None, then a data packet to which the
+         actions should be applied, or None if none.
+ 
+         inport - When packet is sent, the port on which packet came in as input,
+         so that it can be omitted from any OFPP_FLOOD outputs.
+         """
+
+Note that install_datapath_flow() takes in an attributes dictionary with parts of the OpenFlow match.  Here's an example:
+ attrs = {}
+ attrs[core.IN_PORT] = inport
+ attrs[core.DL_DST] = packet.dst
+
+install_datapath_flow also requires a list of actions.  Here's another example:
+ actions = [[openflow.OFPAT_OUTPUT, [0, outport]]]
+
+You will want to use exactly this action list for the tutorial.  The format is a list of actions; we've defined one action, which forwards to a single port (OFPAT = OpenFlow Action Type: Output).  The [0, outport] part that follows is the set of parameters for the output action type: 0 is max_len, which is only defined for packets forwarded to the controller (ignore this), while the outport param specifies the output port.  
+
+The priority shouldn't matter, unless you have overlapping entries.  For example, the priority field could be:
+ openflow.OFP_DEFAULT_PRIORITY
+
+For more details on the format, see the NOX core Python API code in src/nox/core.py.
+
+For more information about OpenFlow constants, see the main OpenFlow types/enums/structs file, '''openflow.h''', in ~/openflow/include/openflow/openflow.h
+
+=== Parsing Packets with the NOX packet libraries ===
+
+The NOX packet parsing libraries are automatically called to parse a packet and make each protocol field available to Python.  
+
+The parsing libraries are in:
+ ~/nox/src/nox/lib/packet/
+
+Each protocol has a corresponding parsing file.
+
+For the first exercise, you'll only need to access the Ethernet source and destination fields.  To extract the source of a packet, use the dot notation:
+ packet.src
+
+The Ethernet src and dst fields are stored as arrays, so you'll probably want to to use the mac_to_str() function or mac_to_int.  I suggest mac_to_str, and it avoids the need to do any hex conversion when printing.  The mac_to_str() function is already imported, and comes from packet_utils in ~/nox/src/nox/lib/packet/packet_utils.py
+
+To see all members of a parsed packet object:
+ print dir(packet)
+Here's what you'd see for an ARP packet:
+ ['ARP_TYPE', 'IP_TYPE', 'LLDP_TYPE', 'MIN_LEN', 'PAE_TYPE', 'RARP_TYPE', 
+  'VLAN_TYPE', '__doc__', '__init__', '__len__', '__module__', '__nonzero__',
+  '__str__', 'arr', 'dst', 'err', 'find', 'hdr', 'hdr_len', 'msg', 'next', 'parse', 
+  'parsed', 'payload_len', 'prev', 'set_payload', 'src', 'tostring', 'type',
+  'type_parsers']
+Many fields are common to all Python objects and can be ignored, but this can be a quick way to avoid a trip to a function's documentation.
+
+Now, skip ahead to Testing Your Controller below.
+
+== Testing Your Controller ==
+
+To test your controller-based Ethernet switch, first verify that when all packets arrive at the controller, only broadcast packets (like ARPs) and packets with unknown destination locations (like the first packet sent for a flow) go out all non-input ports.  You can do this with tcpdump running on an xterm for each host.
+
+Once the switch no longer has hub behavior, work to push down a flow when the source and destination ports are known.  You can use dpctl to verify the flow counters, and if subsequent pings complete much faster, you'll know that they're not passing through the controller.  You can also verify this behavior by running iperf in Mininet and checking that no OpenFlow packet-in messages are getting sent.  The reported iperf bandwidth should be much higher as well, and should match the number you got when using the reference learning switch controller earlier.
+
+Let the instructor know when your learning switch works!
+
+== Support Multiple Switches ==
+
+If you are working with POX, your code should already be able to pass the following tests because it creates one instance per switch and each instance maintains its own MAC table. Otherwise, your controller so far may have probably only supported a single switch, with a single MAC table.  In this section, you'll extend it to support multiple switches.
+
+Start mininet with a different topology.  In the Mininet console:
+ mininet> exit
+ $ sudo mn --topo linear --switch ovsk --controller remote
+
+If you are using Beacon and Mininet 2.0, use the ip= option:
+ mininet> exit
+ $ sudo mn --topo linear --switch ovsk --controller remote,ip=<your_host_ip>
+
+If you are using Beacon and Mininet 1.0, use the --ip option:
+ mininet> exit
+ $ sudo mn --topo linear --switch ovsk --controller remote --ip <your_host_ip>
+
+Your created topology looks like this:
+
+'''Note: for Mininet 2.0, the hosts are h1/10.1 and h2/10.2'''
+
+[[File:Linear2.png]]
+
+
+This will create a 2-switch topology where each switch has a single connected host.
+
+Now, modify your switch so that it stores a MAC-to-port table for each DPID.  This strategy only works on spanning tree networks, and the delay for setting up new paths between far-away hosts is proportional to the number of switches between them.  Other modules could act smarter. For example, one can maintain an all-pairs shortest path data structure and immediately push down all flow entries needed to previously-seen sources and destinations. This is out-of-scope for this assignment.
+
+After the mods, to verify that your controller works, in the Mininet console, run:
+ mininet> pingall
+
+Congratulations on getting this far.  If you are doing this as part of the CS244 assignment, you are done! 
+
+
+If you want to continue, you have three options:
+* run your code over real networking gear (if you are on a live tutorial)
+* add layer-3 forwarding capabilities to your switch
+* add firewall capabilities to your switch
+
+Proceed to the section you prefer.
