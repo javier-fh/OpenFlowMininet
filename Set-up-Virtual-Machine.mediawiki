@@ -1,0 +1,174 @@
+== Import Virtual Machine Image ==
+
+If you downloaded the .ovf image,
+
+* '''Start up VirtualBox, then select File>Import Appliance and select the .ovf image that  you downloaded.'''
+
+You may also be able to simply double-click the .ovf file to open it up in your installed virtualization program.
+
+* '''Next, press the "Import" button.'''
+
+This step will take a while - the unpacked image is about 3 GB.
+
+* '''Continue with [[#Finish VM Setup | Finish VM Setup]] below.'''
+
+
+'''Note: If you downloaded the older .zip archive instead of the .ovf image, setup requires a few more steps:'''
+
+OS X Users: Double-click the virtual machine image to extract it.
+
+Linux Users (and OS X users who prefer the command line): from a terminal, unzip the virtual machine image, e.g.:
+ $ unzip OpenFlowTutorial-101311.zip 
+(If you downloaded a different VM image, make sure you use its correct file name.)
+
+Windows Users: unzip the image in Windows Explorer.
+
+For the .zip archive, you need to set up a new VirtualBox VM. Open VirtualBox.
+* Select New
+* Press Continue in the next prompt.
+* Name your VM OpenFlowTutorial, Operating System Linux, Version Ubuntu. Click Continue.
+* Set the memory at 512MB and click Continue
+* At that point VB should ask you to Create a new hard disk, or use the existing one. Select "Use existing hard disk".
+* Click the icon to select the hard disk. This will open the Virtual Media Manager Window.
+* Press Add, and find the extracted OpenFlowTutorial*.vdi from the previous steps. Click Select and then Continue.
+* Your VM installation is complete. Press Done.
+
+== Finish VM Setup ==
+
+You will need to complete '''one more step before you are done with the VM setup'''. 
+
+Select your VM and go to the Settings Tab. Go to Network->Adapter 2. Select the "Enable adapter" box, and attach it to "host-only network".('''Sidenote''': on a new VirtualBox installation you may not have any "host-only network" configured yet. To have one select File menu/Preferences/Network and "Add host-only network" button with default settings. Then you can try the attach.) '''This will allow you to easily access your VM through your host machine.'''
+
+At that point you should be ready to start your VM. Press the "Start" arrow icon or double-click your VM within the VirtualBox window. 
+
+In the VM console window, log in with the [[#Download Files | user name and password]] for your VM.
+
+Note that this user is a sudoer, so you can execute commands with root permissions by typing <tt>sudo ''command''</tt>, where <tt>''command''</tt> is the command you wish to execute with root permission.
+
+== Choose Preferred Editor ==
+Nano, Vim, Emacs, and Gedit come installed on the OpenFlowTutorial VM.  Brief instructions for each:
+
+'''Nano''': You can immediately modify a file.  When you're done, hit 'ctrl-x', then say 'Yes' to the prompt, to save and quit.
+
+'''Vim''': to modify a file, type 'i' to enter Insert mode, then use the arrow keys to navigate and edit.  When you're done, hit 'esc', type ':wq', then press enter, to save and quit.
+
+Highly recommended for the NOX tutorial: add the following to ~/.vimrc in the VM:
+ set tabstop=4
+ set expandtab
+
+'''Emacs''': you can immediately modify a file.  When you're done, hit 'ctrl-x', 'ctrl-s', then hit 'ctrl-x', 'ctrl-c' to exit.  
+
+'''Gedit''': a graphical text editor, no instructions needed.
+
+'''Eclipse''': Eclipse and its dependencies would require about 500MB extra space on the VM image, so it's not shipped by default.  If you have Eclipse installed on the host VM, using the Remote Systems Explorer can be a convenient way to access and modify text files on the VM, with many of the advantages of Eclipse, such as syntax highlighting.
+
+If you have another preferred text editor, feel free to install it now:
+ $ sudo apt-get install <editor>
+
+=== Command Prompt Notes ===
+ 
+<font color=red> In this tutorial, commands are shown along with a command prompt to indicate what subsystem they are intended for </font>. For example, 
+
+ $ ls
+
+indicates that the <code>ls</code> command should be typed at a Unix (e.g. Linux or OS X) command prompt (which generally ends in <code>$</code> if you are a regular user or <code>#</code> if you are root. 
+
+Other prompts used in this tutorial include 
+
+ mininet>
+
+for commands entered in the Mininet console and 
+
+ C:> 
+
+for code entered into a Windows command window.
+
+== Set Up Network Access ==
+
+The tutorial VM is shipped without a desktop environment, to reduce its size.  All the exercises will be done through X forwarding, where programs display graphics through an X server running on the host OS.
+
+To start up the X forwarding, you'll first need to find the guest IP address.
+
+=== VirtualBox ===
+
+If you are running VirtualBox, you should make sure your VM has '''two network interfaces'''. One should be a '''NAT interface''' that it can use to access the Internet, and the other should be a '''host-only interface''' to enable it to communicate with the host machine. For example, your NAT interface could be eth0 and have a 10.x IP address, and your host-only interface could be eth1 and have a 192.168.x IP address. You should ssh into the '''host-only interface''' at its associated IP address. Both interfaces should be configured using DHCP. If they are not already configured, you may have to run dhclient on each of them, as described below.
+
+== Access VM via SSH ==
+
+In this step, you'll verify that you can connect from the host PC (your laptop) to the guest VM (OpenFlowTutorial) via SSH.
+
+From the virtual machine console, log in to the VM, then enter:
+ $ ifconfig -a
+
+You should see three interfaces(eth0, eth1, lo), Both eth0 and eth1 should have IP address assigned. If this is not the case, type
+ $ sudo dhclient ethX
+
+Replacing ethX with the name of a downed interfaces; sometimes the eth ports appear as eth2 or eth3, you can fix this by editing /etc/udev/rules.d/70-persistent-net.rules and removing the existing configuration lines. 
+
+Note the IP address (probably the 192.168 one) for the '''host-only''' network; you'll need it later.  Next, log in, which will depend on your OS.
+
+=== Mac OS X and Linux ===
+
+Open a terminal (Terminal.app in Mac, Gnome terminal in Ubuntu, etc).  In that terminal, run:
+ $ ssh -X [user]@[Guest IP Here]
+
+Replace [user] with the correct [[#Download Files | user name]] for your VM image.
+
+Replace [Guest IP Here] with the IP you just noted. If ssh does not connect, make sure that you can ping the IP address you are connecting to.
+
+Enter the [[#Download Files | password]] for your VM image.  Next, try starting up an X terminal using
+ $ xterm
+
+and a new terminal window should appear.  If you have succeeded, you are done with the basic setup.  Close the xterm.  If you get a 'xterm: DISPLAY is not set error', verify your X server installation from above.
+
+===Windows ===
+
+In order to use X11 applications such as xterm and wireshark, the Xming server must be running, and you must make an ssh connection with X11 forwarding enabled. 
+
+'''First, start Xming''' (e.g. by double-clicking its icon.) No window will appear, but if you wish you can verify that it is running by looking for its process in Windows' task manger.
+
+'''Second, make an ssh connection with X11 forwarding enabled'''.
+
+If you start up puTTY as a GUI application, you can connect by entering your VM's IP address and enabling X11 forwarding.
+
+To enable X11 forwarding from puTTY's GUI, click puTTY->Connection->SSH->X11, then click on Forwarding->"Enable X11 Forwarding", as shown below:
+
+[[File:Putty_x11_fwding.PNG]]
+
+You can also run putty (with the -X option for X11 forwarding) from the Windows command line:
+
+Open a terminal: click the Windows 'Start' button, 'run', then enter 'cmd'.
+
+Change to the directory where you saved putty.  
+ C:> cd <dir>
+Run: 
+ C:> putty.exe -X openflow@[Guest IP Here]
+
+Replace [Guest IP Here] with the IP you just noted.
+
+If putty cannot connect, try pinging the VM's IP address to make sure you are connecting to the correct interface.
+
+ C:> ping [Guest IP Here]
+
+Once the ssh connection succeeds or a terminal window for the VM pops up, log in to the VM.  Now, type:
+ $ xterm -sb 500
+
+to start an X terminal (the -sb 500 is optional but gives 500 lines of scrollback.)
+
+A white terminal window should appear. If you have succeeded, you are done with the basic setup. Close the xterm.
+
+If the xterm window does not appear, or if you get an error like "xterm:  DISPLAY is not set," make sure that Xming is running in Windows and that you have correctly enabled X11 forwarding.
+
+== Alternative: Run X11 in the VM console window ==
+
+As an alternative to running X11 on your host machine, you may find it
+useful or convenient to install X11 into the VM itself. To install X11 
+and a simple window manager, log in to the '''VM console window''' - ''not'' via an ssh session! - using the correct [[#Download Files | user name and password]] for your VM, and type:
+ $ sudo apt-get update && sudo apt-get install xinit flwm
+
+At this point, you should be able to start an X11 session in the VM console window
+by typing:
+ $ startx
+
+If you are familiar with Linux, you may wish to install another
+desktop manager (e.g. <tt>lxde</tt> or even the full <tt>ubuntu-desktop</tt>)  or any other GUI packages that you prefer.
