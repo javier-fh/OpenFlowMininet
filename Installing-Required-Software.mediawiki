@@ -1,5 +1,3 @@
-= Install Required Software =
-
 You will need to download these files individually.
 
 The files include virtualization software, a SSH-capable terminal, an X server, and the VM image.
