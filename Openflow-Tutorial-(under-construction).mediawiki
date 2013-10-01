@@ -29,7 +29,7 @@ __TOC__
 
 =Overview=
 
-[[File:Tutorial_flow_hw.png]]
+[[images/Tutorial_flow_hw.png]]
 
 In this tutorial, you'll turn the provided hub controller into a controller-based learning switch, then a flow-accelerated learning switch, and extend this from a single-switch network to a multiple-switch multiple-host network. You can also find guidelines for further extensions. Along the way, you'll learn the full suite of OpenFlow debugging tools.  You will:
 * view flow tables with dpctl
