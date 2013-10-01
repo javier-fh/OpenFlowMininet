@@ -23,13 +23,6 @@ If this does not work for you, you can also try our older VM image that uses Min
 
 <span style="color: red">'''Important: For this VM image, the user name is 'openflow' with password 'openflow'.'''</span>
 
-<!--
-* If you're using VirtualBox (which we assume you are for this tutorial) you will want the [http://openflowswitch.org/downloads/cs244-VM-0107.zip VirtualBox VM image].
--->
-
-<!--
- * If you already run VMware, you may wish to try the [http://openflowswitch.org/downloads/OpenFlowTutorial-081910.vmware.zip older VMware VM image].
--->
 The download will take a while - it's on the order of 2GB in size.
 
 You will also need virtualization software, an X server, and an ssh-capable terminal emulator:
@@ -78,4 +71,5 @@ After you have downloaded the appropriate software and VM images,
 make sure that each column item (X server, Virtualization software, and SSH terminal) is installed and working for your platform, and that the VM image loads and runs correctly for your configuration.
 
 == Next Step ==
-[[Set up Virtual Machine]]
+
+=[[Set up Virtual Machine]]=
