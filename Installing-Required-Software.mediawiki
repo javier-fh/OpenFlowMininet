@@ -76,3 +76,6 @@ You will also need virtualization software, an X server, and an ssh-capable term
 
 After you have downloaded the appropriate software and VM images, 
 make sure that each column item (X server, Virtualization software, and SSH terminal) is installed and working for your platform, and that the VM image loads and runs correctly for your configuration.
+
+== Next Step ==
+[Set up Virtual Machine]
