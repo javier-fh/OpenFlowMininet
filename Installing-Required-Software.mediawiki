@@ -72,4 +72,4 @@ make sure that each column item (X server, Virtualization software, and SSH term
 
 == Next Step ==
 
-=[[Set up Virtual Machine]]=
+=== [[Set up Virtual Machine]] ===
