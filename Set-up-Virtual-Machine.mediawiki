@@ -1,6 +1,6 @@
 == Import Virtual Machine Image ==
 
-If you downloaded the .ovf image,
+Once you have downloaded the .ovf image,
 
 * '''Start up VirtualBox, then select File>Import Appliance and select the .ovf image that  you downloaded.'''
 
@@ -9,29 +9,6 @@ You may also be able to simply double-click the .ovf file to open it up in your 
 * '''Next, press the "Import" button.'''
 
 This step will take a while - the unpacked image is about 3 GB.
-
-* '''Continue with [[#Finish VM Setup | Finish VM Setup]] below.'''
-
-
-'''Note: If you downloaded the older .zip archive instead of the .ovf image, setup requires a few more steps:'''
-
-OS X Users: Double-click the virtual machine image to extract it.
-
-Linux Users (and OS X users who prefer the command line): from a terminal, unzip the virtual machine image, e.g.:
- $ unzip OpenFlowTutorial-101311.zip 
-(If you downloaded a different VM image, make sure you use its correct file name.)
-
-Windows Users: unzip the image in Windows Explorer.
-
-For the .zip archive, you need to set up a new VirtualBox VM. Open VirtualBox.
-* Select New
-* Press Continue in the next prompt.
-* Name your VM OpenFlowTutorial, Operating System Linux, Version Ubuntu. Click Continue.
-* Set the memory at 512MB and click Continue
-* At that point VB should ask you to Create a new hard disk, or use the existing one. Select "Use existing hard disk".
-* Click the icon to select the hard disk. This will open the Virtual Media Manager Window.
-* Press Add, and find the extracted OpenFlowTutorial*.vdi from the previous steps. Click Select and then Continue.
-* Your VM installation is complete. Press Done.
 
 == Finish VM Setup ==
 
