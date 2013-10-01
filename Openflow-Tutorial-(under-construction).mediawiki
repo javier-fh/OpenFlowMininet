@@ -77,7 +77,7 @@ Note: you will need to install additional stuff to get the old regression tests 
 The OpenFlow reference distribution includes a set of tests to verify that an OpenFlow switch correctly sends and receives packets.  In this section, you'll run through some of the "Black Box" tests, where the regression switch acts as a controller and verifies that a switch responds properly to OpenFlow messages, as well as properly forwards packets sent to the input ports of the switch.  The Black Box regression tests use this layout:
 
 
-[[Image:Regression_tests.png]]
+[[images/Regression_tests.png]]
  
 
 First, exit from the Mininet console:
