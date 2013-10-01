@@ -6,9 +6,6 @@ This tutorial is your opportunity to gain hands-on experience with the platforms
 
 '''Innovate in your network!'''
 
-After completing this tutorial, please fill out the 
-[https://spreadsheets.google.com/viewform?formkey=dHRnaTVNQzJTNTlrVDZiM21QSGxfZlE6MA feedback form].
-
 '''Active ONS Tutorial Slides (4/16/2012):'''
 * Main Slides [http://www.stanford.edu/~brandonh/ONS/OpenFlowTutorial_ONS_Heller.pptx pptx], [http://www.stanford.edu/~brandonh/ONS/OpenFlowTutorial_ONS_Heller.pdf pdf]
 * Virtualization
