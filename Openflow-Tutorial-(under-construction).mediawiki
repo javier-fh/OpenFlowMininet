@@ -48,7 +48,7 @@ You will need administrative access to the machine.
 The tutorial instructions require no prior knowledge of OpenFlow.  The [http://www.openflowswitch.org/wp/learnmore/ OpenFlow Learn More page] is a concise introduction.
 
 == Stuck?  Found a bug?  Questions?  ==
-Email [openflow-discuss - at - lists.stanford.edu] if you're stuck, think you've found a bug, or just want to send some feedback.
+Email openflow-discuss - at - lists.stanford.edu if you're stuck, think you've found a bug, or just want to send some feedback.
 
 If you are asking a question or reporting a bug, try to include as many details about your setup as possible.  Include your OS, virtualization software info, X11 and ssh software you're using, VM image you're using, memory size, and the step you're on.
 
