@@ -1,0 +1,110 @@
+In this exercise, you'll make a static layer-3 forwarder/switch.  It's not exactly a router, because it won't decrement the IP TTL and recompute the checksum at each hop (so traceroute won't work).  Actions to do TTL and checksum modification are expected in the upcoming OpenFlow version 1.1.  However, it will match on masked IP prefix ranges, just like a real router.
+
+From [http://www.faqs.org/rfcs/rfc1812.html#ixzz0oPra4P9C RFC 1812]:
+<blockquote>
+An IP router can be distinguished from other sorts of packet switching devices in that a router examines the IP protocol header as part of the switching process. It generally removes the Link Layer header a message was received with, modifies the IP header, and replaces the Link Layer header for retransmission.
+</blockquote>
+
+To simplify the exercise, your "router" will be completely static. With no BGP or OSPF, you'll have no need to send or receive route table updates.
+
+Each network node will have a configured subnet.  If a packet is destined for a host within that subnet, the node acts as a switch and forwards the packet with no changes, to a known port or broadcast, just like in the previous exercise.  If a packet is destined for some IP address for which the router knows the next hop, it should modify the layer-2 destination and forward the packet to the correct port.
+
+Our hope is that this exercise will show that with an OpenFlow-enabled forwarding device, the network is effectively layerless; you can mix switch, router, and higher-layer functionality.
+
+Please note that this is an advanced exercise, and given that most implementation details are up to you, will be harder.
+
+== Create Topology ==
+
+You'll need a slightly different topology, something like this:
+'''Note: For Mininet 2.0, the hosts have been renumbered h1-h3 and 10.1-10.3.'''
+
+[[File:Router_topo.png]]
+
+
+… which will need to be described in a way that Mininet will understand.
+
+There's an example custom topology at:
+ ~/mininet/custom/topo-2sw-2host.py
+
+First, copy the example to a new file:
+ $ cp ~/mininet/custom/topo-2sw-2host.py mytopo.py
+
+To run a custom topology, pass Mininet the custom file and pass in the custom topology:
+ $ sudo mn --custom mytopo.py --topo mytopo --mac
+
+Then, in the Mininet console, run:
+ mininet> pingall
+
+Now, modify your topology file to match the picture and verify full host connectivity with pingall in the Mininet console.
+
+== Set up hosts ==
+
+Set up IP configuration on each virtual host to force each one to send to the gateway for destination IPs that are outside of their configured subnet.
+
+You'll need to configure each '''host''' with a subnet, IP, gateway, and netmask. 
+
+''It may seem obvious, but we will warn you anyway: do not attempt to assign IP addresses to the interfaces belonging to switches s1 and s2. If you need to handle traffic "to" or "from" a switch, do so using OpenFlow.''
+
+We can do this directly from the custom topology that you created with mininet. Edit your "mytopo.py" to include the information above.
+
+Helpful Code:
+
+<code>host1 = self.addHost( 'h1', ip="10.0.1.100/24", defaultRoute = "via 10.0.1.1" )</code>
+
+== ARP ==
+
+A router generally has to respond to ARP requests. You will see ethernet broadcasts which will (initially at least) be forwarded to the controller.
+
+Your controller should construct ARP replies and forward them out the appropriate ports.
+
+Structures you will need:
+     - arp cache
+     - routing table (create a structure with all of the information statically assigned)
+     - ip to port dictionary
+     - message queue (while the router waits for an ARP reply)
+
+You will need to send a MAC address back to the host that is arping for you. It does not matter what this address is, so feel free to make up your own!
+
+Helpful information about packet structure:
+
+packet = event.parsed
+
+packet contains the ethernet header
+
+packet.payload contains the IPV4 header or ARP header
+
+packet.payload.payload contains the ICMP header
+
+packet.payload.payload.payload contains the echo or unreach header, assuming this is an ICMP packet
+
+
+ARP structure contains:
+     - hwdst (hardware address of destination - what we are asking for)
+     - hwsrc (hardware address of source)
+     - protodst (IP address of destination)
+     - protosrc (IP address of source)
+     - opcode (type of arp package[REQUEST, REPLY, REV_REQUEST, REV_REPLY])
+
+== Static Routing ==
+
+Once ARP has been handled, you will need to handle routing for the static configuration. Since we know what is connected to each port, we can match on IP address (or prefix, in the case of the remote subnet) and forward out the appropriate port.
+
+We need to handle all of the non arp traffic that comes through the router by forwarding it to the correct subnet. The only change in the packet should be the source and destination MAC addresses.
+
+If the router does not know the MAC address of the destination, it will have to arp for that host.
+
+== ICMP ==
+
+Additionally, your controller may receive ICMP echo (ping) requests for each switch, which it should respond to.
+
+Lastly, packets for unreachable subnets should be responded to with ICMP network unreachable messages.
+
+== Testing your router ==
+
+If the router works properly:
+* attempts to send from 10.0.1.2 to an unknown address range like 10.99.0.1 should yield an [http://en.wikipedia.org/wiki/ICMP_Destination_Unreachable ICMP destination unreachable] message.
+* packets sent to hosts on the same subnet should be treated like before.
+* packets sent to hosts on a known address range should have their MAC dst field changed to that of the next-hop router.
+* the router should be pingable, and should generate an ICMP echo reply in response to an ICMP echo request.
+
+The exercise is meant to give more practice with packet parsing and show how to use OpenFlow to modify packets.
