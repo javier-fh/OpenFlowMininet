@@ -39,7 +39,7 @@ You will also need virtualization software, an X server, and an ssh-capable term
 |[http://the.earth.li/~sgtatham/putty/latest/x86/putty.exe PuTTY]
 |-
 |Mac
-|OS X 10.7-10.8 Lion/Mountain Lion
+|OS X 10.7-10.9 Lion/Mountain Lion/ Mavericks
 |[http://www.virtualbox.org/wiki/Downloads VirtualBox]
 |download and install [http://xquartz.macosforge.org/trac/wiki XQuartz]
 |Terminal.app (built in)
