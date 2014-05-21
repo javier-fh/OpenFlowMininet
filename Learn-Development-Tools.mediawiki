@@ -122,9 +122,9 @@ Start a new SSH terminal and connect to the VM with X11 forwarding.
 (Reminder: here are the command-line commands to do so:
 
 If you're using MAC OS X or Linux, enter:
- $ ssh -X openflow@[guest ip address]
+ $ ssh -X mininet@[guest ip address]
 If you're using putty.exe from the Windows command-lineshell, enter:
- C:> putty.exe -X openflow@[guest ip address]
+ C:> putty.exe -X mininet@[guest ip address]
 
 If you're using putty's GUI, make sure X11 forwarding is enabled.)
 
