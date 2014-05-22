@@ -6,8 +6,7 @@ This is an advanced exercise, and most implementation details will be left to yo
 
 You'll need a slightly different topology, something like this:
 
-[[File:Router_topo.png]]
+[[images/Router_topo.png]]
 
 
 Modify your topology file to match the picture and verify full host connectivity with pingall in the Mininet console.
-
