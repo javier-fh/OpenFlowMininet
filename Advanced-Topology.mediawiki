@@ -10,3 +10,5 @@ You'll need a slightly different topology, something like this:
 
 
 Modify your topology file to match the picture and verify full host connectivity with pingall in the Mininet console.
+
+This is just an idea for a more advanced topology. Feel free to adjust this exercise in any way you would like. The rest is up to you, so have fun!
