@@ -58,24 +58,37 @@ A router generally has to respond to ARP requests. You will see ethernet broadca
 Your controller should construct ARP replies and forward them out the appropriate ports.
 
 Structures you will need:
-     - arp cache
-     - routing table (create a structure with all of the information statically assigned)
-     - ip to port dictionary
-     - message queue (while the router waits for an ARP reply)
+     * arp cache
+     * routing table (create a structure with all of the information statically assigned)
+     * ip to port dictionary
+     * message queue (while the router waits for an ARP reply)
+
+Sample Routing Table:
+
+(ip with network prefix, ip of host, interface name, interface address, switch port)
+
+
+  ['10.0.1.100/24', '10.0.1.100', 's1-eth1', '10.0.1.1', 1],
+  ['10.0.2.100/24', '10.0.2.100', 's1-eth2', '10.0.2.1', 3],
+  ['10.0.3.100/24', '10.0.3.100', 's1-eth3', '10.0.3.1', 2]
+
+
+'''NOTE: the port number does not correspond to the switch name. This is not a typo but a known mininet bug.'''
 
 You will need to send a MAC address back to the host that is arping for you. It does not matter what this address is, so feel free to make up your own!
 
 Helpful information about packet structure:
+'''NOTE: The following information is specific to the POX Controller'''
 
-packet = event.parsed
+<code>packet = event.parsed</code> packet contains the ethernet packet
 
-packet contains the ethernet header
+<code>protocol = packet.payload</code> strips the ethernet header and contains the ipv4 or arp packet
 
-packet.payload contains the IPV4 header or ARP header
+<code>packet.payload.payload</code> strips the protocol header and contains the underlying packet(ICMP?)
 
-packet.payload.payload contains the ICMP header
+<code>packet.payload.payload.payload</code> strips the ICMP header and contains the echo or unreach packet, assuming this is an ICMP packet
 
-packet.payload.payload.payload contains the echo or unreach header, assuming this is an ICMP packet
+...etc
 
 
 ARP structure contains:
@@ -89,22 +102,63 @@ ARP structure contains:
 
 Once ARP has been handled, you will need to handle routing for the static configuration. Since we know what is connected to each port, we can match on IP address (or prefix, in the case of the remote subnet) and forward out the appropriate port.
 
-We need to handle all of the non arp traffic that comes through the router by forwarding it to the correct subnet. The only change in the packet should be the source and destination MAC addresses.
+We need to handle all ipv4 traffic that comes through the router by forwarding it to the correct subnet. The only change in the packet should be the source and destination MAC addresses.
 
 If the router does not know the MAC address of the destination, it will have to arp for that host.
 
 == ICMP ==
 
-Additionally, your controller may receive ICMP echo (ping) requests for each switch, which it should respond to.
+Additionally, your controller may receive ICMP echo (ping) requests for the router, which it should respond to.
 
 Lastly, packets for unreachable subnets should be responded to with ICMP network unreachable messages.
+
+'''NOTE: the controller only accepts 128 byte packet_ins by default. If your messages are getting truncated, this could be why. As a workaround, add another component at the end of your call too the controller. it should look like this: '''
+
+$ ./pox.py log.level --DEBUG (your controller) misc.full_payload
 
 == Testing your router ==
 
 If the router works properly:
 * attempts to send from 10.0.1.2 to an unknown address range like 10.99.0.1 should yield an [http://en.wikipedia.org/wiki/ICMP_Destination_Unreachable ICMP destination unreachable] message.
-* packets sent to hosts on the same subnet should be treated like before.
 * packets sent to hosts on a known address range should have their MAC dst field changed to that of the next-hop router.
 * the router should be pingable, and should generate an ICMP echo reply in response to an ICMP echo request.
+
+Now run iperf to test tcp and udp traffic. In mininet, open up xterm in host 1 and host 3 with 
+
+mininet>xterm h1 h3
+
+host 3 will be the iperf server, so in it's own terminal run the command 
+
+$ iperf -s
+
+host 1 will be the client, so in it's own terminal run the command
+
+$ iperf -c (ip address of iperf server)
+
+you may also test udp traffic by adding a -u option to the end of both commands
+
+Note the results for this test. In your code's current state, the router sends all of the traffic to the controller via packet_ins, which makes a routing decision and sends a packet_out to the router. The next step is to install flow mods, which should yield better performance with iperf.
+
+== Flow Mods ==
+
+Flow mods should be relatively easy to install. There are a few important structures to consider when creating the flow mod:
+
+*of.ofp_flow_mod() ==> the packet that will eventually be sent to the router to add a flow entry
+*of.ofp_match() ==> the structure containing the criteria for a packet to be matched on 
+*of.ofp_action_output(port = [port]) ==> action to be performed on matching packets. This action specifies a port to output the packet to
+*of.ofp_action_dl_addr.set_src([hwsrc]) ==> action to change the ethernet packet's hardware source address
+
+There are many other actions that may be performed on matching packets. See the open flow spec 1.0 for more information
+
+Steps to install flow mod:
+1) Create a match for the type of packet coming in
+2) Create an ofp_flow_mod structure, and set the match attribute to your match
+3) Specify the actions to be taken when receiving this type of packet
+4) Append each action to the flow mod structure
+5) Send the flow mod back to the router
+
+Now that you have flow mods installed, run the iperf tests again and notice the performance difference
+
+
 
 The exercise is meant to give more practice with packet parsing and show how to use OpenFlow to modify packets.
