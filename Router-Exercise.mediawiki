@@ -151,11 +151,11 @@ Flow mods should be relatively easy to install. There are a few important struct
 There are many other actions that may be performed on matching packets. See the open flow spec 1.0 for more information
 
 Steps to install flow mod:
-1) Create a match for the type of packet coming in
-2) Create an ofp_flow_mod structure, and set the match attribute to your match
-3) Specify the actions to be taken when receiving this type of packet
-4) Append each action to the flow mod structure
-5) Send the flow mod back to the router
+1) Create a match for the type of packet coming insteps<br />
+2) Create an ofp_flow_mod structure, and set the match attribute to your match<br />
+3) Specify the actions to be taken when receiving this type of packet<br />
+4) Append each action to the flow mod structure<br />
+5) Send the flow mod back to the router<br />
 
 Now that you have flow mods installed, run the iperf tests again and notice the performance difference
 
