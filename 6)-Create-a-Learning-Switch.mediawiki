@@ -379,8 +379,8 @@ Go to Eclipse and stop Beacon (you should see a square, red button in the consol
 '''NOTE : You can run only one controller at the same time (otherwise you'll get a port conflict). Make sure that you stop any running instance of Beacon before you start another one. With Eclipse this might be tricky. To check the running programs open the Debug perspective (Window->Open Perspective->Debug). On the top-left corner you can see the running programs, click on it then hit the red square to terminate the redundant ones...'''
 
 {| class="wikitable"
-| [[File:Eclipse_console_stop.png|none|thumb|200px]]
-| [[File:Eclipse_debug_stop.png|none|thumb|200px]]
+| [[images/Eclipse_console_stop.png|none|thumb|200px]]
+| [[images/Eclipse_debug_stop.png|none|thumb|200px]]
 |}
 
 The file you'll modify is '''net.beaconcontroller.tutorial/src/main/java/net/beaconcontroller/tutorial/LearningSwitchTutorial.java'''.  Find this file in the left pane of Eclipse and double-click it to open it in the editor window.
@@ -827,7 +827,7 @@ Your created topology looks like this:
 
 '''Note: for Mininet 2.0, the hosts are h1/10.1 and h2/10.2'''
 
-[[File:Linear2.png]]
+[[images/Linear2.png]]
 
 
 This will create a 2-switch topology where each switch has a single connected host.
