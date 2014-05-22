@@ -1,5 +1,7 @@
 *[[Home]]
+
 *[[Installing Required Software]]
+
 *[[Set Up Virtual Machine]]
 *[[Virtual Box Specific Instructions]]
 *[[Learn Development Tools]]
