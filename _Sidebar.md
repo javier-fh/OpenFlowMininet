@@ -1,5 +1,2 @@
-###Foo
-[[Home]]
-
-###Foo
+###TODO
 [[Home]]
