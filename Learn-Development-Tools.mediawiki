@@ -32,7 +32,7 @@ Let's get started...
 The network you'll use for the first exercise includes 3 hosts and a switch (and, eventually, an OpenFlow controller, but we'll get to that later):
 
 
-[[File:Three_switch_layout_simple.png]]
+[[images/Three_switch_layout_simple.png]]
  
 
 To create this network in the VM, in an SSH terminal, enter:

@@ -110,7 +110,7 @@ If you start up puTTY as a GUI application, you can connect by entering your VM'
 
 To enable X11 forwarding from puTTY's GUI, click puTTY->Connection->SSH->X11, then click on Forwarding->"Enable X11 Forwarding", as shown below:
 
-[[File:Putty_x11_fwding.PNG]]
+[[images/Putty_x11_fwding.png]]
 
 You can also run putty (with the -X option for X11 forwarding) from the Windows command line:
 

@@ -827,7 +827,7 @@ Your created topology looks like this:
 
 '''Note: for Mininet 2.0, the hosts are h1/10.1 and h2/10.2'''
 
-[[File:Linear2.png]]
+[[images/Linear2.png]]
 
 
 This will create a 2-switch topology where each switch has a single connected host.

@@ -1,0 +1,14 @@
+The instructions are the same for this exercise as the last one. The only difference is the topology, which includes two routers controlling different subnets. 
+
+This is an advanced exercise, and most implementation details will be left to you.
+
+== Topology ==
+
+You'll need a slightly different topology, something like this:
+
+[[images/Router_topo.png]]
+
+
+Modify your topology file to match the picture and verify full host connectivity with pingall in the Mininet console.
+
+This is just one idea for a more advanced topology. Feel free to adjust this exercise in any way you would like. The rest is up to you, so have fun!
