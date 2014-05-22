@@ -18,7 +18,7 @@ Please note that this is an advanced exercise, and given that most implementatio
 You'll need a slightly different topology, something like this:
 '''Note: For Mininet 2.0, the hosts have been renumbered h1-h3 and 10.1-10.3.'''
 
-[[images/Router_topo.png]]
+[[images/Router_exercise_topo.png]]
 
 
 … which will need to be described in a way that Mininet will understand.
