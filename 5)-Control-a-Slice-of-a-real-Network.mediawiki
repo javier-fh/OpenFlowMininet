@@ -14,7 +14,7 @@ Ideally, you shouldn't write any code for this experiment. You will have to form
 
 Here is the topology that we will use:
 
-[[File:Virtualized_layout_detail.png|center|thumb|500px]]
+[[images/Virtualized_layout_detail.png|center|thumb|500px]]
 
 
 
@@ -66,7 +66,7 @@ where <guestIP> is the IP address of the eth1 interface of the VM, and X is 100 
 To enable port forwarding on the Putty, please enter the appropriate fields during connection setup
 
 
-[[File:Putty_port_fwding.PNG]]
+[[images/Putty_port_fwding.png]]
 
 ===Verify reachability===
 
