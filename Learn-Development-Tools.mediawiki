@@ -257,4 +257,4 @@ Exit Mininet:
 
 == Next Step ==
 
-Continue on to [https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch your first assignment]
+Continue on to your first assignment, [[Create a Learning Switch]]
