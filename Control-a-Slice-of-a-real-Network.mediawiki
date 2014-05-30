@@ -9,7 +9,7 @@ The setup includes:
 # 1 controller/team
 # 1 Webserver
 # 1 Wireless device/team (could be your laptop's WiFi, your iPhone, Droid  etc)
- 
+
 Ideally, you shouldn't write any code for this experiment. You will have to form teams though. When you are ready to start, ask the instructors to put you in a team.
 
 Here is the topology that we will use:
@@ -141,3 +141,9 @@ Fire your browser and go to http://10.0.0.1:8000
 Write and post a short message and make sure you fill your team's number.
 
 Look what others said at http://10.0.0.1:8000/posts
+
+== Next Step ==
+
+Good Job! continue on to the next exercise:
+
+[https://github.com/mininet/openflow-tutorial/wiki/Router-Exercise router exercise]
