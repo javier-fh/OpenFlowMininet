@@ -156,4 +156,4 @@ desktop manager (e.g. <tt>lxde</tt> or even the full <tt>ubuntu-desktop</tt>)  o
 
 When you are finished setting up your virtual machine, follow the link below:
 
-[https://github.com/mininet/openflow-tutorial/wiki/Learn-Development-Tools Learn Development Tools]
+[[Learn Development Tools]]
