@@ -131,7 +131,7 @@ This tutorial was written by Brandon Heller and Yiannis Yiakoumis and beta-teste
 
 For the current Tutorial VM setup, see:
 
-https://github.com/mininet/mininet/wiki/VM-Creation-Notes
+[[https://github.com/mininet/openflow-tutorial/wiki/Installing-Required-Software]]
 
 
 <!-- 
