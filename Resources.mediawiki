@@ -22,7 +22,18 @@
 * [http://ryu.readthedocs.org/en/latest/ Read The Docs Tutorial]
 
 ===== Floodlight =====
+* [https://github.com/floodlight/floodlight Source Code]
+* [http://www.projectfloodlight.org/floodlight/ Official Website]
+* [http://www.projectfloodlight.org/documentation/ Official Documentation]
 
 ===== Trema =====
+* [https://github.com/trema/trema Source Code]
+* [https://github.com/trema/trema/wiki Documentation]
+* [http://trema.github.io/trema/ Website]
 
 ===== Beacon =====
+* [https://github.com/bigswitch/BeaconMirror Source Code]
+* [https://openflow.stanford.edu/display/Beacon/Home Web Site]
+
+=== OpenFlow ===
+* [http://archive.openflow.org/documents/openflow-spec-v1.0.0.pdf OpenFlow 1.0 Spec]
