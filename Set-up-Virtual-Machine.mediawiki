@@ -151,3 +151,9 @@ by typing:
 
 If you are familiar with Linux, you may wish to install another
 desktop manager (e.g. <tt>lxde</tt> or even the full <tt>ubuntu-desktop</tt>)  or any other GUI packages that you prefer.
+
+== Next Step ==
+
+When you are finished setting up your virtual machine, follow the link below:
+
+[[https://github.com/mininet/openflow-tutorial/wiki/Learn-Development-Tools]]
