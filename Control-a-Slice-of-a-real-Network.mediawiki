@@ -146,4 +146,4 @@ Look what others said at http://10.0.0.1:8000/posts
 
 Good Job! continue on to the next exercise:
 
-[https://github.com/mininet/openflow-tutorial/wiki/Router-Exercise router exercise]
+[[Router Exercise]]
