@@ -27,7 +27,7 @@ The three values you added above should be shown.
 Save your network settings for future reboots, by powering down the VM, from the VM window:
  sudo poweroff
 
-Restart the OpenFlowTutorial VM once again, by clicking 'Start' at the top of VirtualBox.  Login again with the correct [[#Download Files | user name and password]].  
+Restart the OpenFlowTutorial VM once again, by clicking 'Start' at the top of VirtualBox.  Login again with the correct user name and password.  
 
 '''Windows Users''' You may need to change the VM configuration.  Edit  /etc/network/interfaces.  Check that it says:
  allow hot-plug eth1
@@ -38,8 +38,8 @@ If it says eth0, change it to eth1; note that to write the file you'll need to u
 
 === Mac OS X and Linux ===
 To SSH from the local machine to the VM, on the local machine run:
- ssh -Y -l [[#Download Files | <user name>]] -p 2222 localhost
-with the correct [[#Download Files | user name and password]].  Test the X11 forwarding by running on the local machine:
+ ssh -Y -l <user name> -p 2222 localhost
+with the correct user name and password.  Test the X11 forwarding by running on the local machine:
  xterm
 and a new terminal window should appear.  If you have succeeded, you are done with the basic setup.  Close the xterm.
 
@@ -56,7 +56,7 @@ A new window will pop up; type in the password.  Now, type:
  xterm
 A white terminal window should appear. If you have succeeded, you are done with the basic setup. Close the xterm.
 
-Make sure you use the correct [[#Download Files | user name and password]] for your VM image.
+Make sure you use the correct user name and password for your VM image.
 
 <!--
 
