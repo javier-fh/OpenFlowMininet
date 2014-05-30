@@ -843,6 +843,6 @@ Congratulations on getting this far!
 
 If you want to continue, you have two options:
 * run your code over real networking gear (if you are on a live tutorial):
-[[https://github.com/mininet/openflow-tutorial/wiki/Control-a-Slice-of-a-real-Network]]
+[[Control a Slice of a Real Network]]
 * add layer-3 forwarding capabilities to your switch:
-[[https://github.com/mininet/openflow-tutorial/wiki/Router-Exercise]]
+[[Router Exercise]]
