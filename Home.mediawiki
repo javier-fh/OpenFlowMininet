@@ -4,6 +4,8 @@ OpenFlow is an open interface for remotely controlling the forwarding tables in 
 
 This tutorial is your opportunity to gain hands-on experience with the platforms and debugging tools most useful for developing network control applications on OpenFlow. This page contains some material to get you started with Openflow and Mininet. Check the side bar on the right for a list of assignments to walk you through everything from the creation of your virtual machine to the implementation of an openflow router.
 
+A good place to start is [https://github.com/mininet/openflow-tutorial/wiki/Installing-Required-Software installing required software]
+
 '''Innovate in your network!'''
 
 '''Active ONS Tutorial Slides (4/16/2012):'''
