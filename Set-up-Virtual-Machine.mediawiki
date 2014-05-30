@@ -18,7 +18,7 @@ Select your VM and go to the Settings Tab. Go to Network->Adapter 2. Select the 
 
 At that point you should be ready to start your VM. Press the "Start" arrow icon or double-click your VM within the VirtualBox window. 
 
-In the VM console window, log in with the user name and password for your VM. These should both be "mininet" for the 64-bit version, or "openflow" for the 32-bit version.
+In the VM console window, log in with the user name and password for your VM. These should both be "mininet" 
 
 Note that this user is a sudoer, so you can execute commands with root permissions by typing <tt>sudo ''command''</tt>, where <tt>''command''</tt> is the command you wish to execute with root permission.
 
