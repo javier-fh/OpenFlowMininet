@@ -18,7 +18,7 @@ Select your VM and go to the Settings Tab. Go to Network->Adapter 2. Select the 
 
 At that point you should be ready to start your VM. Press the "Start" arrow icon or double-click your VM within the VirtualBox window. 
 
-In the VM console window, log in with the [[#Download Files | user name and password]] for your VM.
+In the VM console window, log in with the user name and password for your VM. These should both be "mininet" for the 64-bit version, or "openflow" for the 32-bit version.
 
 Note that this user is a sudoer, so you can execute commands with root permissions by typing <tt>sudo ''command''</tt>, where <tt>''command''</tt> is the command you wish to execute with root permission.
 
@@ -43,7 +43,7 @@ If you have another preferred text editor, feel free to install it now:
  $ sudo apt-get install <editor>
 
 === Command Prompt Notes ===
- 
+
 <font color=red> In this tutorial, commands are shown along with a command prompt to indicate what subsystem they are intended for </font>. For example, 
 
  $ ls
@@ -89,11 +89,11 @@ Note the IP address (probably the 192.168 one) for the '''host-only''' network; 
 Open a terminal (Terminal.app in Mac, Gnome terminal in Ubuntu, etc).  In that terminal, run:
  $ ssh -X [user]@[Guest IP Here]
 
-Replace [user] with the correct [[#Download Files | user name]] for your VM image.
+Replace [user] with the correct user name for your VM image.
 
 Replace [Guest IP Here] with the IP you just noted. If ssh does not connect, make sure that you can ping the IP address you are connecting to.
 
-Enter the [[#Download Files | password]] for your VM image.  Next, try starting up an X terminal using
+Enter the password for your VM image.  Next, try starting up an X terminal using
  $ xterm
 
 and a new terminal window should appear.  If you have succeeded, you are done with the basic setup.  Close the xterm.  If you get a 'xterm: DISPLAY is not set error', verify your X server installation from above.
@@ -140,7 +140,7 @@ If the xterm window does not appear, or if you get an error like "xterm:  DISPLA
 
 As an alternative to running X11 on your host machine, you may find it
 useful or convenient to install X11 into the VM itself. To install X11 
-and a simple window manager, log in to the '''VM console window''' - ''not'' via an ssh session! - using the correct [[#Download Files | user name and password]] for your VM, and type:
+and a simple window manager, log in to the '''VM console window''' - ''not'' via an ssh session! - using the correct user name and password for your VM, and type:
  $ sudo apt-get update && sudo apt-get install xinit flwm
 
 At this point, you should be able to start an X11 session in the VM console window
