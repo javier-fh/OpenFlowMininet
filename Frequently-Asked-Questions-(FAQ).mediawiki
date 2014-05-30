@@ -47,11 +47,17 @@ You are probably getting an error like "cannot open display."
 
 This probably means that you have not successfully connected to the VM with ssh and X11 forwarding enabled.
 
-Make sure that you have carefully followed our instructions above. If you are on Windows, make sure that
+Make sure that you have carefully followed our instructions. If you are on Windows, make sure that:
 
 * You have '''installed''' Xming and PuTTY
 * You have '''started up Xming''' (important!) and it is '''still running'''
 * You have '''enabled X11 forwarding'''
 * You have verified that you can '''ssh in with X11 forwarding''' and '''start up an xterm'''
 
-'''If you cannot start up an xterm, you will not be able to run wireshark!'''
+If you are on a Mac, make sure that:
+
+* You have '''installed''' XQuartz
+* xterm works in Terminal (or XQuartz)
+* You have verified that you can '''ssh into the Mininet VM''' (using ssh -X from Terminal) and '''start up an xterm'''
+
+'''---> If you cannot start up an xterm, you will not be able to run wireshark! <---'''
