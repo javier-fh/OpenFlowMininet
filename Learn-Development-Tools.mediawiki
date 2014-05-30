@@ -71,9 +71,9 @@ If Mininet is not working correctly (or has crashed and needs to be restarted), 
 
 and running Mininet again. 
 
-<font color=red> NB: The prompt <code> mininet> </code> is for Mininet console, <code> $ </code> is for SSH terminal (normal user) and <code> # </code> is for SSH terminal (root user) </font> (See  [http://www.openflow.org/wk/index.php/OpenFlow_Tutorial#Command_Prompt_Notes Command Prompt Notes]).  Hereafter we follow with this rule.
+<font color=red> NB: The prompt <code> mininet> </code> is for Mininet console, <code> $ </code> is for SSH terminal (normal user) and <code> # </code> is for SSH terminal (root user) </font> (See  [https://github.com/mininet/openflow-tutorial/wiki/Set-up-Virtual-Machine#Command_Prompt_Notes Command Prompt Notes]).  Hereafter we follow with this rule.
 
-Mininet has loads of other commands and startup options to help with debugging, and this brief starter should be sufficient for the tutorial.  If you're curious about other options, follow the [http://www.openflowswitch.org/foswiki/bin/view/OpenFlow/MininetWalkthrough Mininet Walkthrough] after the main tutorial.
+Mininet has loads of other commands and startup options to help with debugging, and this brief starter should be sufficient for the tutorial.  If you're curious about other options, follow the [http://mininet.org/walkthrough/ Mininet Walkthrough] after the main tutorial.
 
 == dpctl Example Usage ==
 '''dpctl''' is a utility that comes with the OpenFlow reference distribution and enables visibility and control over a single switch's flow table.  It is especially useful for debugging, by viewing flow state and flow counters.  Most OpenFlow switches can start up with a passive listening port (in your current setup this is 6634), from which you can poll the switch, without having to add debugging code to the controller.
@@ -254,3 +254,7 @@ See a difference?  With the user-space switch, packets must cross from user-spac
 
 Exit Mininet:
  mininet> exit
+
+== Next Step ==
+
+Continue on to [https://github.com/mininet/openflow-tutorial/wiki/Control-a-Slice-of-a-real-Network your first assignment]
