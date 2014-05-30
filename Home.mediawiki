@@ -2,7 +2,7 @@ Welcome to the OpenFlow tutorial!
 
 OpenFlow is an open interface for remotely controlling the forwarding tables in network switches, routers, and access points.  Upon this low-level primitive, researchers can build networks with new high-level properties.  For example, OpenFlow enables more secure default-off networks, wireless networks with smooth handoffs, scalable data center networks, host mobility, more energy-efficient networks and new wide-area networks – to name a few.
 
-This tutorial is your opportunity to gain hands-on experience with the platforms and debugging tools most useful for developing network control applications on OpenFlow. 
+This tutorial is your opportunity to gain hands-on experience with the platforms and debugging tools most useful for developing network control applications on OpenFlow. This page contains some material to get you started with Openflow and Mininet. Check the side bar on the right for a list of assignments to walk you through everything from the creation of your virtual machine to the implementation of an openflow router.
 
 '''Innovate in your network!'''
 
