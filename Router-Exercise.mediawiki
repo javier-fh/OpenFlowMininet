@@ -11,7 +11,6 @@ Each network node will have a configured subnet.  If a packet is destined for a 
 
 Our hope is that this exercise will show that with an OpenFlow-enabled forwarding device, the network is effectively layerless; you can mix switch, router, and higher-layer functionality.
 
-Please note that this is an advanced exercise, and given that most implementation details are up to you, will be harder.
 
 == Create Topology ==
 
