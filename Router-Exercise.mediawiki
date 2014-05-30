@@ -159,5 +159,12 @@ Steps to install flow mod:<br />
 Now that you have flow mods installed, run the iperf tests again and notice the performance difference
 
 
-
 The exercise is meant to give more practice with packet parsing and show how to use OpenFlow to modify packets.
+
+== Next Step ==
+
+Congratulations! By now you understand the basics of openflow, and probably have many ideas of things to implement in your own controller. The following exercises are just examples of further projects, but the possibilities are limitless. If you wish to continue with this tutorial, below are a few more exercises you may complete:
+
+* [https://github.com/mininet/openflow-tutorial/wiki/Advanced-Topology advanced router topology]
+
+* [https://github.com/mininet/openflow-tutorial/wiki/Create-Firewall implementing a firewall]
