@@ -2,11 +2,11 @@ Now, let's move on building a networking application. We provide you with starte
 
 Later, you'll turn this into a flow-based switch, where seeing a packet with a known source and dest causes a flow entry to get pushed down.
 
-For this tutorial you will need to choose a controller platform to build on top of.  The best option is likely the controller written in the language you are most familiar with.  Plus, after making your controller, rewriting it on another controller platform should go quickly and be a useful exercise.  Your options are:
+For this tutorial you will need to choose a controller platform to build on top of.  The best option is likely the controller written in the language you are most familiar with, although we recommend POX, as the rest of the tutorial is based on it. Your options are:
 
-* '''Java''': [[#Controller Choice: Beacon (Java)|Beacon]], [[#Controller Choice: Floodlight (Java)|Floodlight]]
-* '''Python''': [[#Controller Choice: POX (Python)|POX]], [[#Controller Choice: Ryu (Python)|Ryu]], [[#Controller Choice: NOX w/Python|NOX (Deprecated)]]
-* '''Ruby''': [[#Controller Choice: Trema (Ruby)|Trema]]
+* '''Java''': [[#Controller_Choice_Beacon_Java|Beacon]], [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Floodlight_Java|Floodlight]]
+* '''Python''': [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_POX_Python|POX]], [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Ryu_Python|Ryu]], [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_NOX_wPython|NOX (Deprecated)]]
+* '''Ruby''': [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Trema_Ruby|Trema]]
 
 ==Controller Choice: POX (Python) ==
 
@@ -120,7 +120,7 @@ To comment a line of code:
  # Prepend comments with a #; no // or /**/
 
 More Python resources:
-* [http://docs.python.org/lib/built-in-funcs.html List of built-in functions] 
+* [https://docs.python.org/2/library/functions.html List of built-in functions] 
 * [http://docs.python.org/tutorial/ Official Python tutorial]
 
 The subsections below give details about POX APIs that should prove useful in the exercise.  There is also other documentation available in the [http://www.noxrepo.org/pox/documentation/ appropriate section of POX's website]. 
@@ -332,7 +332,7 @@ Launching Beacon from Eclipse in debug mode
 
 This command will start Beacon, including the 'tutorial' bundle, listening to incoming connection from switches on the standard OpenFlow port (6633).
 
-Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, your Eclipse console should print something like this: 
+Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, your Eclipse console should print something like this:
 
 01:07:31.095 [pool-2-thread-2] INFO  n.b.core.internal.Controller - Switch connected from java.nio.channels.SocketChannel[connected local=/192.168.206.2:6633 remote=/192.168.206.4:54994]
 
@@ -599,7 +599,7 @@ This command told NOX to start the 'tutorial' application, to print verbose debu
 The switches may take a little bit of time to connect.   When an OpenFlow switch loses its connection to a controller, it will generally increase the period between which it attempts to contact the controller, up to a maximum of 15 seconds.  Since the OpenFlow switch has not connected yet, this delay may be anything between 0 and 15 seconds.   If this is too long to wait, the switch can be configured to wait no more than N seconds using the --max-backoff parameter.  Alternately, you exit Mininet to remove the switch(es), start the controller, and then start Mininet to immediately connect.
 
 Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, NOX will print something like this: 
- 00039|nox|DBG:Registering switch with DPID = 1
+00039|nox|DBG:Registering switch with DPID = 1
 
 If you see the switch print out a message like "sent error in response to capability reply, assuming no management support", this is OK.  Open vSwitch has custom extensions to support a management database, but we're not enabling them on our OpenFlow switch.
 
@@ -837,12 +837,12 @@ Now, modify your switch so that it stores a MAC-to-port table for each DPID.  Th
 After the mods, to verify that your controller works, in the Mininet console, run:
  mininet> pingall
 
-Congratulations on getting this far.  If you are doing this as part of the CS244 assignment, you are done! 
+== Next Step ==
 
+Congratulations on getting this far!
 
-If you want to continue, you have three options:
-* run your code over real networking gear (if you are on a live tutorial)
-* add layer-3 forwarding capabilities to your switch
-* add firewall capabilities to your switch
-
-Proceed to the section you prefer.
+If you want to continue, you have two options:
+* run your code over real networking gear (if you are on a live tutorial):
+[[https://github.com/mininet/openflow-tutorial/wiki/Control-a-Slice-of-a-real-Network]]
+* add layer-3 forwarding capabilities to your switch:
+[[https://github.com/mininet/openflow-tutorial/wiki/Router-Exercise]]
