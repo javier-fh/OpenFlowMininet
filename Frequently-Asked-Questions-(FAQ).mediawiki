@@ -57,7 +57,7 @@ Make sure that you have carefully followed our instructions. If you are on Windo
 If you are on a Mac, make sure that:
 
 * You have '''installed''' XQuartz
-* xterm works in Terminal (or XQuartz)
+* You can start an xterm from Terminal (or XQuartz)
 * You have verified that you can '''ssh into the Mininet VM''' (using ssh -X from Terminal) and '''start up an xterm'''
 
 '''===> If you cannot start up an xterm, you will not be able to run wireshark!!!'''
