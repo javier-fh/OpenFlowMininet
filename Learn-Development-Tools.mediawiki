@@ -14,7 +14,7 @@ The OpenFlowTutorial VM includes a number of OpenFlow-specific and general netwo
 
 * '''OpenFlow Switch''': sits below the OpenFlow interface.  The OpenFlow reference distribution includes a user-space software switch.  Open vSwitch is another software but kernel-based switch, while there is a number of hardware switches available from Broadcom (Stanford Indigo release), HP, NEC, and others.
 
-* '''dpctl''': command-line utility that sends quick OpenFlow messages, useful for viewing switch port and flow stats, plus manually inserting flow entries.
+* '''ovs-ofctl''': command-line utility that sends quick OpenFlow messages, useful for viewing switch port and flow stats or manually inserting flow entries.
 
 * '''Wireshark''': general (non-OF-specific) graphical utility for viewing packets.  The OpenFlow reference distribution includes a Wireshark dissector, which parses OpenFlow messages sent to the OpenFlow default port (6633) in a conveniently readable way.
 
