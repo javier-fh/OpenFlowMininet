@@ -70,7 +70,7 @@ To learn more about OpenFlow in general, consult the [http://www.openflowswitch.
 
 ==Additional Tools==
 *[http://www.openflowswitch.org/foswiki/bin/view/OpenFlow/Mininet Mininet].
-*[http://www.openflow.org/wk/index.php/FlowVisor FlowVisor].
+*[https://openflow.stanford.edu/display/DOCS/Flowvisor FlowVisor].
 
 ==Old Regression Tests==
 Note: you will need to install additional stuff to get the old regression tests working.  See the install instructions for your platform, referenced at the top of the [http://openflow.org/wk OpenFlow wiki]
