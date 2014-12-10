@@ -11,8 +11,8 @@ You'll need to download the files corresponding to your OS, plus the tutorial VM
 
 Start now with downloading a compressed VM image:
 
-* [https://bitbucket.org/mininet/mininet-vm-images/downloads/mininet-2.1.0-130919-ubuntu-13.04-server-amd64-ovf.zip Virtual Machine Image (OVF format, 64-bit, Mininet 2.1.0)]
-* [https://bitbucket.org/mininet/mininet-vm-images/downloads/mininet-2.1.0-130919-ubuntu-13.04-server-i386-ovf.zip Virtual Machine Image (OVF format, 32-bit, Mininet 2.1.0)]
+* [http://downloads.mininet.org/mininet-2.2.0-141209-ubuntu-14.04-server-amd64.zip Virtual Machine Image (OVF format, 64-bit, Mininet 2.2.0)]
+* [http://downloads.mininet.org/mininet-2.2.0-141209-ubuntu-14.04-server-i386.zip Virtual Machine Image (OVF format, 32-bit, Mininet 2.2.0)]
 <span style="color: red">'''Important: For these VM images, the user name is 'mininet' with password 'mininet'.'''</span>
 
 The OVF format can be imported into VirtualBox, VMware, or other popular virtualization programs.
