@@ -67,7 +67,7 @@ If you are asking a question or reporting a bug, try to include as many details 
 
 ==OpenFlow==
 
-To learn more about OpenFlow in general, consult the [http://www.openflowswitch.org main OpenFlow page].  There are videos, blog entries, and more.  Check the wiki for link to OpenFlow-based projects and demos.
+To learn more about OpenFlow in general, consult the [https://www.opennetworking.org/sdn-resources/openflow  Open Networking Foundation OpenFlow site] and the [http://www.openflowswitch.org historical OpenFlow page].  There are videos, blog entries, and more.  Check the wiki for link to OpenFlow-based projects and demos.
 
 ==Additional Tools==
 *[http://www.openflowswitch.org/foswiki/bin/view/OpenFlow/Mininet Mininet].
