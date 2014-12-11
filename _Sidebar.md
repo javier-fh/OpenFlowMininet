@@ -1,7 +1,7 @@
 * [[Home]]<br />
 * [[Installing Required Software]]<br />
 * [[Set Up Virtual Machine]]<br />
-* [[Virtual Box Specific Instructions]]<br />
+* [[VirtualBox Specific Instructions]]<br />
 * [[Learn Development Tools]]<br />
 * [[Create a Learning Switch]]<br />
 * [[Control a Slice of a Real Network]]<br />
