@@ -50,7 +50,7 @@ These instructions consider Linux, OS X, and Windows.  Linux and OS X are prefer
 You will need administrative access to the machine.
 
 The tutorial instructions require no prior knowledge of OpenFlow.  The [http://www.openflowswitch.org/wp/learnmore/ OpenFlow Learn More page] is a concise introduction, and more information is available from the
-[Open Networking Foundation](https://www.opennetworking.org/sdn-resources/openflow).
+[https://www.opennetworking.org/sdn-resources/openflow Open Networking Foundation].
 
 == Stuck?  Found a bug?  Questions?  ==
 Email openflow-discuss - at - lists.stanford.edu if you're stuck, think you've found a bug, or just want to send some feedback.
