@@ -127,7 +127,7 @@ Exit back to regular username:
 
 =Credits=
 
-This tutorial was written by Brandon Heller and Yiannis Yiakoumis and beta-tested by Bob Lantz, KK Yap and Masayoshi Kobayashi.
+This tutorial was originally written by Brandon Heller and Yiannis Yiakoumis and beta-tested by Bob Lantz, KK Yap and Masayoshi Kobayashi.
 
 =Notes=
 
