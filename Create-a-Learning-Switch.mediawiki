@@ -36,10 +36,10 @@ This tells POX to enable verbose logging and to start the of_tutorial component 
 
 The switches may take a little bit of time to connect.   When an OpenFlow switch loses its connection to a controller, it will generally increase the period between which it attempts to contact the controller, up to a maximum of 15 seconds.  Since the OpenFlow switch has not connected yet, this delay may be anything between 0 and 15 seconds.   If this is too long to wait, the switch can be configured to wait no more than N seconds using the --max-backoff parameter.  Alternately, you exit Mininet to remove the switch(es), start the controller, and then start Mininet to immediately connect.
 
-Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, POX will print something like this: 
- INFO:openflow.of_01:[Con 1/1] Connected to 00-00-00-00-00-01
- DEBUG:samples.of_tutorial:Controlling [Con 1/1]
- 
+Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, POX will print something like this:
+ <nowiki>INFO:openflow.of_01:[Con 1/1] Connected to 00-00-00-00-00-01
+ DEBUG:samples.of_tutorial:Controlling [Con 1/1]</nowiki>
+
 The first line is from the portion of POX that handles OpenFlow connections.  The second is from the tutorial component itself.
 
 === Verify Hub Behavior with tcpdump ===
