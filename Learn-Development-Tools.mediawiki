@@ -76,7 +76,7 @@ and running Mininet again.
 Mininet has loads of other commands and startup options to help with debugging, and this brief starter should be sufficient for the tutorial.  If you're curious about other options, follow the [http://mininet.org/walkthrough/ Mininet Walkthrough] after the main tutorial.
 
 == ovs-ofctl Example Usage ==
-'''ovs-ofctl''' is a utility that comes with Open vSwitch and enables visibility and control over a single switch's flow table.  It is especially useful for debugging, by viewing flow state and flow counters.  Most OpenFlow switches can start up with a passive listening port , from which you can poll the switch, without having to add debugging code to the controller.
+'''ovs-ofctl''' is a utility that comes with Open vSwitch and enables visibility and control over a single switch's flow table.  It is especially useful for debugging, by viewing flow state and flow counters.  Most OpenFlow switches can start up with a passive listening port, from which you can poll the switch, without having to add debugging code to the controller.
 
 Create a second SSH window if you don't already have one, and run:
  $ ovs-ofctl show s1
@@ -87,6 +87,16 @@ Here's a more useful command:
  $ ovs-ofctl dump-flows s1
 
 Since we haven't started any controller yet, the flow-table should be empty.
+
+Note: In the above example, ovs-ofctl is talking to a local instance of Open vSwitch via a Unix domain socket which it is looking up by name. The actual socket is probably something like /var/run/openvswitch/s1.mgmt . If you were running another switch such as the Stanford reference switch or even a hardware OpenFlow switch, you would need to connect to a passive TCP port using a command like
+ $ ovs-ofctl dump-flows tcp:<ip address>:<port>
+
+where <ip address> is the IP address of the switch's management interface and <port> is the passive listening port. If Mininet is invoked with '--switch user', it will open up a passive listening port for each switch at port (6633+n) where n is the number of the switch. This will enable ovs-ofctl to be used in commands like
+ $ ovs-ofctl dump-flows tcp:127.0.0.1:6634
+
+For the purposes of this tutorial, you will usually be using Open vSwitch so you can just use the simple form of the ovs-ofctl command.
+
+Note that there are also dpctl and ovs-dpctl commands; usually these commands should not be used and ovs-ofctl should be used instead. With Open vSwitch, they have a specific use allowing you to examine OVS's kernel flow cache, which is usually a subset of the full OpenFlow flow table which you or the controller have programmed.
 
 == Ping Test ==
 
