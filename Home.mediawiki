@@ -132,14 +132,14 @@ Exit back to regular username:
 
 This tutorial was originally written by Brandon Heller and Yiannis Yiakoumis and beta-tested by Bob Lantz, KK Yap and Masayoshi Kobayashi.
 
+<!--
+
 =Notes=
 
 ==VM Creation Notes==
 
-For the current Tutorial VM setup, see:
-
-[[https://github.com/mininet/openflow-tutorial/wiki/Installing-Required-Software]]
-
+The current Tutorial VM is simply a Mininet VM.
+-->
 
 <!-- 
 <pre>
