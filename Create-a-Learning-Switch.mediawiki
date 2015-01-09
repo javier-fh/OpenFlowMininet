@@ -803,7 +803,7 @@ Now, skip ahead to Testing Your Controller below.
 
 To test your controller-based Ethernet switch, first verify that when all packets arrive at the controller, only broadcast packets (like ARPs) and packets with unknown destination locations (like the first packet sent for a flow) go out all non-input ports.  You can do this with tcpdump running on an xterm for each host.
 
-Once the switch no longer has hub behavior, work to push down a flow when the source and destination ports are known.  You can use dpctl to verify the flow counters, and if subsequent pings complete much faster, you'll know that they're not passing through the controller.  You can also verify this behavior by running iperf in Mininet and checking that no OpenFlow packet-in messages are getting sent.  The reported iperf bandwidth should be much higher as well, and should match the number you got when using the reference learning switch controller earlier.
+Once the switch no longer has hub behavior, work to push down a flow when the source and destination ports are known.  You can use ovs-ofctl to verify the flow counters, and if subsequent pings complete much faster, you'll know that they're not passing through the controller.  You can also verify this behavior by running iperf in Mininet and checking that no OpenFlow packet-in messages are getting sent.  The reported iperf bandwidth should be much higher as well, and should match the number you got when using the reference learning switch controller earlier.
 
 Let the instructor know when your learning switch works!
 
