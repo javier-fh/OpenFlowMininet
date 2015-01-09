@@ -17,7 +17,7 @@ One option for the first exercise is to use POX.  POX is a Python-based SDN cont
 We're not going to be using the reference controller anymore, which may still be running (do '<code>ps -A | grep controller</code>' if you're unsure), so you should either press Ctrl-C in the window running the controller program, or kill it from the other SSH window:
  $ sudo killall controller
 
-You should also run <code>sudo mn -c</code> and restart Mininet to make sure that everything is "clean" and using the faster kernel switch. From your Mininet console:
+You should also run <tt>sudo mn -c</tt> and restart Mininet to make sure that everything is "clean" and using the faster kernel switch. From your Mininet console:
  mininet> exit
  $ sudo mn -c
  $ sudo mn --topo single,3 --mac --switch ovsk --controller remote
