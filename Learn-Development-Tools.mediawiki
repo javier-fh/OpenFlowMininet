@@ -76,6 +76,9 @@ and running Mininet again.
 Mininet has loads of other commands and startup options to help with debugging, and this brief starter should be sufficient for the tutorial.  If you're curious about other options, follow the [http://mininet.org/walkthrough/ Mininet Walkthrough] after the main tutorial.
 
 == ovs-ofctl Example Usage ==
+
+(Just to remind you, we are assuming that you have already started up Mininet in another window using <tt>sudo mn --topo single,3 --mac --switch ovsk --controller remote</tt>, as directed above.)
+
 '''ovs-ofctl''' is a utility that comes with Open vSwitch and enables visibility and control over a single switch's flow table.  It is especially useful for debugging, by viewing flow state and flow counters.  Most OpenFlow switches can start up with a passive listening port, from which you can poll the switch, without having to add debugging code to the controller.
 
 Create a second SSH window if you don't already have one, and run:
