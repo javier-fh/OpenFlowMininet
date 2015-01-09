@@ -72,6 +72,8 @@ To learn more about OpenFlow in general, consult the [https://www.opennetworking
 *[http://www.openflowswitch.org/foswiki/bin/view/OpenFlow/Mininet Mininet].
 *[https://openflow.stanford.edu/display/DOCS/Flowvisor FlowVisor].
 
+<!--
+
 ==Old Regression Tests==
 Note: you will need to install additional stuff to get the old regression tests working.  See the install instructions for your platform, referenced at the top of the [http://openflow.org/wk OpenFlow wiki]
 
@@ -123,6 +125,8 @@ A replacement test suite is in the making, and is expected for mid 2010.  The ne
 
 Exit back to regular username:
  # exit
+
+-->
 
 =Credits=
 
