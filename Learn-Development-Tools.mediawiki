@@ -99,7 +99,7 @@ Do you get any replies? Why? Why not?
 
 As you saw before, switch flow table is empty. Besides that, there is no controller connected to the switch and therefore the switch doesn't know what to do with incoming traffic, leading to ping failure.
 
-You'll use dpctl to manually install the necessary flows. In your SSH terminal:
+You'll use ovs-ofctl to manually install the necessary flows. In your SSH terminal:
  $ ovs-ofctl add-flow s1 in_port=1,actions=output:2
  $ ovs-ofctl add-flow s1 in_port=2,actions=output:1
 
