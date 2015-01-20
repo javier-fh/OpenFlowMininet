@@ -203,6 +203,9 @@ Now, we'll view messages generated in response to packets.
 
 Before that update your wireshark filter to ignore the echo-request/reply messages (these are used to keep the connection between the switch and controller alive):
 Type the following in your wireshark filter, then press apply:
+ of and not (of10.echo_request.type or of10.echo_reply_type)
+
+Note: older versions of the wireshark plugin used a slightly different syntax:
  of && (of.type != 3) && (of.type != 2)
 
 Run a ping to view the OpenFlow messages being used.  In the Mininet console:
