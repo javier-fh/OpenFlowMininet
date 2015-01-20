@@ -205,7 +205,9 @@ Before that update your wireshark filter to ignore the echo-request/reply messag
 Type the following in your wireshark filter, then press apply:
  of and not (of10.echo_request.type or of10.echo_reply_type)
 
-Note: older versions of the wireshark plugin used a slightly different syntax:
+Note that there are a variety of other ways that you could express that filter.
+
+If you have an old version of the wireshark plugin, you may need to use a slightly different syntax:
  of && (of.type != 3) && (of.type != 2)
 
 Run a ping to view the OpenFlow messages being used.  In the Mininet console:
