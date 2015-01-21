@@ -203,7 +203,7 @@ Now, we'll view messages generated in response to packets.
 
 Before that update your wireshark filter to ignore the echo-request/reply messages (these are used to keep the connection between the switch and controller alive):
 Type the following in your wireshark filter, then press apply:
- of and not (of10.echo_request.type or of10.echo_reply_type)
+ of and not (of10.echo_request.type or of10.echo_reply.type)
 
 Note that there are a variety of other ways that you could express that filter.
 
