@@ -1,5 +1,9 @@
 == VirtualBox: Host-Only Network ==
-The easiest way to ssh into a VirtualBox VM is to use a '''host-only''' network interface, as we suggest.
+The easiest way to ssh into a VirtualBox VM is to via a '''host-only''' network interface, as we suggest.
+
+First, add a '''host-only''' network interface to your VM.
+
+Next, boot your VM and make sure that this new interface has showed up as eth1.
 
 To allow network access in the VM, execute:
  sudo dhclient eth1
