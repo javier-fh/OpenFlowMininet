@@ -52,6 +52,8 @@ If it says eth0, change it to eth1; note that to write the file you'll need to u
 
 == SSH Connections after you've set up Port Forwarding ==
 
+First, ''make sure you've set up port forwarding to forward host port 2222 to VM port 22, as described above''. If you haven't set this up correctly, it will not work!
+
 === Mac OS X and Linux ===
 To SSH from the local machine to the VM, on the local machine run:
  ssh -Y -l <user name> -p 2222 localhost
