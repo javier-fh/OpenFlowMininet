@@ -9,6 +9,16 @@ Otherwise, you can change the default, NAT interface as shown below and execute 
 
 In order to log in via a NAT interface, we need to set up port forwarding. This may also enable users on your LAN to log in to the VM, which you may or may not want.
 
+One way to set up port forwarding is to use the VirtualBox GUI.
+
+To set up Port Forwarding using the GUI, go to
+
+Settings (for your VM) > Network > Adapter 1 > Advanced > Port Forwarding
+
+and then add a rule to forward TCP host port 2222 to guest port 22.
+
+It is also possible to set up port forwarding via the (OS X, Linux or Windows) command line.
+
 '''OS X / Linux Users''' Run the VBoxManage commands below from a local terminal (not the VM window).
 
 '''Windows Users''' If you are using Windows Vista, first close Virtual box, to ensure that config files aren't locked.  Then open a command line prompt, by click on 'Start', then 'Run', then typing 'cmd' and hitting enter.  In the terminal that appears, change to the VirtualBox directory:
@@ -34,7 +44,7 @@ Restart the OpenFlowTutorial VM once again, by clicking 'Start' at the top of Vi
  iface eth1 inet dhcp
 If it says eth0, change it to eth1; note that to write the file you'll need to use sudo.  If you changed the interfaces file, poweroff the machine (sudo poweroff) and then start it again.
 
-== VirtualBox SSH Connections ==
+== VirtualBox SSH Connections (If you've set up Port Forwarding) ==
 
 === Mac OS X and Linux ===
 To SSH from the local machine to the VM, on the local machine run:
