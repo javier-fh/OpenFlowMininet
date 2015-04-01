@@ -24,6 +24,7 @@ and then add a rule to forward TCP host port 2222 to guest port 22.
 
 It is also possible to set up port forwarding via the (OS X, Linux or Windows) command line, and this is described below.
 
+=== Port Forwarding setup using VBoxManage ===
 
 '''OS X / Linux Users''' Run the VBoxManage commands below from a local terminal (not the VM window).
 
