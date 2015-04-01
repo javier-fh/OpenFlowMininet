@@ -1,4 +1,4 @@
-== VirtualBox: Host-Only Network ==
+== VirtualBox: Setting up a Host-Only Network ==
 The easiest way to ssh into a VirtualBox VM is to via a '''host-only''' network interface, as we suggest.
 
 First, add a '''host-only''' network interface to your VM.
@@ -9,7 +9,7 @@ To allow network access in the VM, execute:
  sudo dhclient eth1
 which grabs an IP address.  If eth1 is a '''host-only''' network interface, you are all set and should be able to ssh to eth1's IP address from your host.
 
-== VirtualBox: Port Forwarding ==
+== VirtualBox: Setting up Port Forwarding ==
 As an alternative to the host-only network, you can change the default, NAT interface as shown below and execute ''sudo dhclient eth0''.
 
 In order to log in via a NAT interface, we need to set up port forwarding. This may also enable users on your LAN to log in to the VM, which you may or may not want.
