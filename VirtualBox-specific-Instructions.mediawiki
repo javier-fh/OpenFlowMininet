@@ -46,7 +46,7 @@ Restart the OpenFlowTutorial VM once again, by clicking 'Start' at the top of Vi
  iface eth1 inet dhcp
 If it says eth0, change it to eth1; note that to write the file you'll need to use sudo.  If you changed the interfaces file, poweroff the machine (sudo poweroff) and then start it again.
 
-== VirtualBox SSH Connections (If you've set up Port Forwarding) ==
+== SSH Connections after you've set up Port Forwarding ==
 
 === Mac OS X and Linux ===
 To SSH from the local machine to the VM, on the local machine run:
@@ -55,7 +55,7 @@ with the correct user name and password.  Test the X11 forwarding by running on 
  xterm
 and a new terminal window should appear.  If you have succeeded, you are done with the basic setup.  Close the xterm.
 
-===Windows XP===
+===Windows ===
 Start Xming; nothing exciting will happen but it will show an icon on the right of the toolbar.
 
 Open a terminal: click 'Start', 'run', then enter 'cmd'.
