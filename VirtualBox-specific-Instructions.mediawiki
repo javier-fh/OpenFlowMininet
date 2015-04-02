@@ -10,6 +10,13 @@ To allow network access in the VM, execute:
  sudo dhclient eth1
 which grabs an IP address.  If eth1 is a '''host-only''' network interface, you are all set and should be able to ssh to eth1's IP address from your host.
 
+You can edit /etc/network/interfaces to add an entry for eth1, e.g.
+
+ auto eth1
+ iface eth1 inet dhcp
+
+This will run dhclient automatically on eth1.
+
 == VirtualBox: Setting up Port Forwarding ==
 As an alternative to the host-only network, you can change the default, NAT interface as shown below and execute ''sudo dhclient eth0''.
 
