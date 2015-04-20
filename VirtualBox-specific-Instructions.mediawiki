@@ -15,7 +15,7 @@ You can edit /etc/network/interfaces to add an entry for <tt>eth1</tt>, e.g.
  auto eth1
  iface eth1 inet dhcp
 
-This will run dhclient automatically on eth1.
+This will run dhclient automatically on <tt>eth1</tt>.
 
 == VirtualBox: Setting up Port Forwarding ==
 As an alternative to the host-only network, you can change the default, NAT interface as shown below and execute <tt>sudo dhclient eth0</tt>.
@@ -26,7 +26,7 @@ One way to set up port forwarding is to use the VirtualBox GUI.
 
 To set up Port Forwarding using the GUI, go to
 
-Settings (for your VM) > Network > Adapter 1 > Advanced > Port Forwarding
+'''Settings (for your VM) > Network > Adapter 1 > Advanced > Port Forwarding'''
 
 and then add a rule to forward TCP host port 2222 to guest port 22.
 
