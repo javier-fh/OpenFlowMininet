@@ -114,7 +114,7 @@ Do you get any replies? Why? Why not?
 
 As you saw before, switch flow table is empty. Besides that, there is no controller connected to the switch and therefore the switch doesn't know what to do with incoming traffic, leading to ping failure.
 
-You'll use ovs-ofctl to manually install the necessary flows. In your SSH terminal:
+You'll use <tt>ovs-ofctl</tt> to manually install the necessary flows. In your SSH terminal:
  $ ovs-ofctl add-flow s1 in_port=1,actions=output:2
  $ ovs-ofctl add-flow s1 in_port=2,actions=output:1
 
@@ -126,8 +126,7 @@ Run the ping command again. In your mininet console:
 
 Do you get replies now? Check the flow-table again and look the statistics for each flow entry. Is this what you expected to see based on the ping traffic?
 
-
-<!-- this doesn't seem to be true  true for ovs-ofctl
+<!-- this doesn't seem to be true for ovs-ofctl
 NOTE: if you didn't see any ping replies coming through, it might be the case that the flow-entries expired before you start your ping test. When you do a "dpctl dump-flows" you can see an "idle_timeout" option for each entry, which defaults to 60s. This means that the flow will expire after 60secs if there is no incoming traffic. Run again respecting this limit, or install a flow-entry with longer timeout.
  $ ovs-ofctl add-flow s1 in_port=1,idle_timeout=120,actions=output:2
 -->
