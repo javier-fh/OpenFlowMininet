@@ -91,6 +91,8 @@ Here's a more useful command:
 
 Since we haven't started any controller yet, the flow-table should be empty.
 
+=== Accessing remote OVS instances or the Stanford reference switch ===
+
 Note: In the above example, <tt>ovs-ofctl</tt> is talking to a local instance of Open vSwitch via a Unix domain socket which it is looking up by name. The actual socket is probably something like <tt>/var/run/openvswitch/s1.mgmt</tt> . If you were running another switch such as the Stanford reference switch or even a hardware OpenFlow switch, you would need to connect to a passive TCP port using a command like
  $ ovs-ofctl dump-flows tcp:{ip address}:{port}
 
