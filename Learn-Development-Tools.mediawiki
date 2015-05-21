@@ -84,7 +84,9 @@ Mininet has loads of other commands and startup options to help with debugging, 
 Create a second SSH window if you don't already have one, and run:
  $ ovs-ofctl show s1
 
-(one user reports the need to prepend with <tt>sudo</tt>, otherwise a "permission denied" comes back)
+One user reports the need to prepend with <tt>sudo</tt>, otherwise a "permission denied" comes back:
+ $ sudo ovs-ofctl show s1
+
 
 The <tt>show</tt> command connects to the switch and dumps out its port state and capabilities.
 
@@ -220,6 +222,8 @@ If you have an old version of the wireshark plugin, you may need to use a slight
 Run a ping to view the OpenFlow messages being used.  In the Mininet console:
  mininet> h1 ping -c1 h2
 
+You will need to run this without having any flows between h1 and h2 already installed, e.g. from the "add-flows" command above: sudo ovs-ofctl dump-flows s1
+
 In the Wireshark window, you should see a number of new message types:
 
 {| style="color:black; background-color:#ffffff;" cellpadding="10" cellspacing="0" border="1"
@@ -243,7 +247,6 @@ In the Wireshark window, you should see a number of new message types:
 |Switch->Controller
 |a flow timed out after a period of inactivity.
 |}
-
 
 First, you see an ARP request miss the flow table, which generates a broadcast Packet-Out message.  Next, the ARP response comes back; with both MAC addresses now known to the controller, it can push down a flow to the switch with a Flow-Mod message.  The switch does then pushes flows for the ICMP packets.  Subsequent ping requests go straight through the datapath, and should incur no extra messages; with the flows connecting h1 and h2 already pushed to the switch, there was no controller involvement.
 
