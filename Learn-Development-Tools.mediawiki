@@ -84,6 +84,8 @@ Mininet has loads of other commands and startup options to help with debugging, 
 Create a second SSH window if you don't already have one, and run:
  $ ovs-ofctl show s1
 
+(one user reports the need to prepend with <tt>sudo</tt>, otherwise a "permission denied" comes back)
+
 The <tt>show</tt> command connects to the switch and dumps out its port state and capabilities.
 
 Here's a more useful command:
