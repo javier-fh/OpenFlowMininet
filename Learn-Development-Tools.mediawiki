@@ -219,10 +219,14 @@ Note that there are a variety of other ways that you could express that filter.
 If you have an old version of the wireshark plugin, you may need to use a slightly different syntax:
  of && (of.type != 3) && (of.type != 2)
 
-Run a ping to view the OpenFlow messages being used.  In the Mininet console:
+Run a ping to view the OpenFlow messages being used.  
+You will need to run this without having any flows between h1 and h2 already installed, e.g. from the "add-flows" command above: 
+
+ sudo ovs-ofctl dump-flows s1
+
+Do the ping in the Mininet console:
  mininet> h1 ping -c1 h2
 
-You will need to run this without having any flows between h1 and h2 already installed, e.g. from the "add-flows" command above: sudo ovs-ofctl dump-flows s1
 
 In the Wireshark window, you should see a number of new message types:
 
