@@ -222,7 +222,7 @@ If you have an old version of the wireshark plugin, you may need to use a slight
 Run a ping to view the OpenFlow messages being used.  
 You will need to run this without having any flows between h1 and h2 already installed, e.g. from the "add-flows" command above: 
 
- sudo ovs-ofctl dump-flows s1
+ sudo ovs-ofctl del-flows s1
 
 Do the ping in the Mininet console:
  mininet> h1 ping -c1 h2
