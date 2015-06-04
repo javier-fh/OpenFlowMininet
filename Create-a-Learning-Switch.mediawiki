@@ -22,7 +22,7 @@ You should also run <tt>sudo mn -c</tt> and restart Mininet to make sure that ev
  $ sudo mn -c
  $ sudo mn --topo single,3 --mac --switch ovsk --controller remote
 
-You then need to download the POX code from the [https://github.com/noxrepo/pox POX repository on github] into your VM:
+Newer mininet releases have POX preinstalled. If it's missing on your VM, or if you want a later version of POX, download it from the [https://github.com/noxrepo/pox POX repository on github] into your VM:
  $ git clone http://github.com/noxrepo/pox
  $ cd pox
 
