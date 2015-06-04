@@ -38,7 +38,7 @@ The switches may take a little bit of time to connect.   When an OpenFlow switch
 
 Wait until the application indicates that the OpenFlow switch has connected.  When the switch connects, POX will print something like this:
  <nowiki>INFO:openflow.of_01:[Con 1/1] Connected to 00-00-00-00-00-01
- DEBUG:samples.of_tutorial:Controlling [Con 1/1]</nowiki>
+ DEBUG:misc.of_tutorial:Controlling [00-00-00-00-00-01 1]</nowiki>
 
 The first line is from the portion of POX that handles OpenFlow connections.  The second is from the tutorial component itself.
 
