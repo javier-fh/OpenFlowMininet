@@ -224,6 +224,10 @@ You will need to run this without having any flows between h1 and h2 already ins
 
  sudo ovs-ofctl del-flows s1
 
+It's also recommended to clean up ARP cache on both hosts, otherwise you might not see some ARP requests/replies as the cache will be used instead:
+ mininet> h1 ip -s -s neigh flush all
+ mininet> h2 ip -s -s neigh flush all
+
 Do the ping in the Mininet console:
  mininet> h1 ping -c1 h2
 
