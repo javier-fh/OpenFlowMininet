@@ -119,11 +119,11 @@ Do you get any replies? Why? Why not?
 As you saw before, switch flow table is empty. Besides that, there is no controller connected to the switch and therefore the switch doesn't know what to do with incoming traffic, leading to ping failure.
 
 You'll use <tt>ovs-ofctl</tt> to manually install the necessary flows. In your SSH terminal:
- $ ovs-ofctl add-flow s1 in_port=1,actions=output:2
- $ ovs-ofctl add-flow s1 in_port=2,actions=output:1
+ # ovs-ofctl add-flow s1 in_port=1,actions=output:2
+ # ovs-ofctl add-flow s1 in_port=2,actions=output:1
 
 This will forward packets coming at port 1 to port 2 and vice-verca. Verify by checking the flow-table
- $ ovs-ofctl dump-flows s1
+ # ovs-ofctl dump-flows s1
 
 Run the ping command again. In your mininet console:
  mininet> h1 ping -c3 h2
