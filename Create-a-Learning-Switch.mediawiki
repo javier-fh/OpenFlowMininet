@@ -123,7 +123,7 @@ More Python resources:
 * [https://docs.python.org/2/library/functions.html List of built-in functions] 
 * [http://docs.python.org/tutorial/ Official Python tutorial]
 
-The subsections below give details about POX APIs that should prove useful in the exercise.  There is also other documentation available in the [http://www.noxrepo.org/pox/documentation/ appropriate section of POX's website]. 
+The subsections below give details about POX APIs that should prove useful in the exercise.  There is also other documentation available in the [https://openflow.stanford.edu/display/ONL/POX+Wiki#POXWiki-POXAPIs appropriate section of POX's website]. 
 
 === Sending OpenFlow messages with POX ===
 
