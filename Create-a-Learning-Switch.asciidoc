@@ -68,7 +68,7 @@ You should see three unanswered ARP requests in the tcpdump xterms.  If your cod
 You can close the xterms now.
 
 === Benchmark Hub Controller w/iperf ===
-Here, you'll benchmark the provided of_tutorial hub. Vim is a good choice, it comes already downloaded with terminal. It has some funky commands to edit text so this cheat sheet can be of use. To use vim, make sure you are in the correct directory (pox/pox/misc) and enter: 
+Here, you'll benchmark the provided of_tutorial hub. Vim is a good choice, it comes already downloaded with terminal. It has some funky commands to edit text so http://vim.rtorr.com/[this cheat sheet] can be of use. To use vim, make sure you are in the correct directory (pox/pox/misc) and enter: 
 
 vi of_tutorial.py
 
