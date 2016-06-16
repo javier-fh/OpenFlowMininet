@@ -423,6 +423,7 @@ At the end of this phase you should be able to send pings back and forth, and in
 
 At the end of phase 2, when pinging and viewing the controller traffic in Wireshark you should see an initial OFPacketOut that floods for the request/response, then an OFFlowMod being sent for both request/response, then no further traffic for the same ping.
 
+
 Remember that running this is exactly as you did above. You go to Run - Debug Configurations -> OSGi Framework -> beacon tutorial LearningSwitch and then choose Debug to actually start the controller. Then from terminal send out a couple pings or check the bandwidth by using iperf. 
 
 === Learning Java and Beacon ===
