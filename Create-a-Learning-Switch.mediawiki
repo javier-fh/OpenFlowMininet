@@ -47,6 +47,8 @@ The first line is from the portion of POX that handles OpenFlow connections.  Th
 Now we verify that hosts can ping each other, and that all hosts see the exact same traffic - the behavior of a hub.  To do this, we'll create xterms for each host and view the traffic in each.  In the Mininet console, start up three xterms:
  mininet> xterm h1 h2 h3
 
+Note: the xterm command does not work and will through an error if you try to call it from the virtual box directly, instead use another terminal window to call xterm.
+
 Arrange each xterm so that they're all on the screen at once.  This may require reducing the height of to fit a cramped laptop screen.
 
 In the xterms for h2 and h3, run <code>tcpdump</code>, a utility to print the packets seen by a host:
@@ -89,6 +91,10 @@ vi of_tutorial.py
 The current code calls act_like_hub() from the handler for packet_in messages to implement switch behavior.  You'll want to switch to using the act_like_switch() function, which contains a sketch of what your final learning switch code should look like.
 
 Each time you change and save this file, make sure to restart POX, then use pings to verify the behavior of the combination of switch and controller as a (1) hub, (2)  controller-based Ethernet learning switch, and (3) flow-accelerated learning switch.  For (2) and (3), hosts that are not the destination for a ping should display no tcpdump traffic after the initial broadcast ARP request.
+
+To test your code: Make sure you have mininet running and then put ./pox.py log.level --DEBUG misc.of_tutorial in the other terminal window. Once it’s connected, try a couple pings to see if the switch is working. The bandwidth returned by iperf from a switch (Gbits) should be much faster than a hub (Mbits).
+
+Additionally, Pox has an api written by the ONOS project that is pretty useful. You can find it at pox.onosproject.org.
 
 === Learning Python ===
 This section introduces Python, giving you just enough to be dangerous.
@@ -259,6 +265,10 @@ You will need the following installed in your '''host machine''' :
 
 * [http://java.sun.com/javase/downloads/widget/jdk6.jsp Java 6 JDK & JRE] (Java 7 JDK is fine on OSX)
 
+Note: I you already have eclipse you need to get the PDE download, which you can by clicking on help->install new software. Then under work with choose The Eclipse Project updates and check the box for Eclipse Plugin Development Tools. 
+
+If you don’t have eclipse, when you download the newest version of eclipse make sure you download the RCP + REP version. 
+
 Next, download the Beacon tutorial package for your '''host machine's operating system''', the file names begin with beacon-tutorial-eclipse:
 
 * [https://openflow.stanford.edu/static/beacon/releases/1.0.2/ Tutorial Packages]
@@ -343,6 +353,8 @@ Wait until the application indicates that the OpenFlow switch has connected.  Wh
 Now we verify that hosts can ping each other, and that all hosts see the exact same traffic - the behavior of a hub.  To do this, we'll create xterms for each host, and view the traffic in each.  In the Mininet console, start up three xterms:
  mininet> xterm h1 h2 h3
 
+Note: the xterm command does not work and will through an error if you try to call it from the virtual box directly, instead use another terminal window to call xterm.
+
 Arrange each xterm so that they're all on the screen at once.  This may require reducing the height of to fit a cramped laptop screen.
 
 In the xterms for h2 and h3, run tcpdump, a utility to print the packets seen by a host:
@@ -409,7 +421,9 @@ At the end of this phase you should be able to send pings back and forth, and in
 ==== Phase 2 ====
 * If the destination port is known, instead of sending an OFPacketOut, send an OFFlowMod so that subsequent pings are matched on the switch.
 
-At the end of phase 2, when pinging and viewing the controller traffic in Wireshark you should see an initial OFPacketOut that floods for the request/response, then an OFFlodMod being sent for both request/response, then no further traffic for the same ping.
+At the end of phase 2, when pinging and viewing the controller traffic in Wireshark you should see an initial OFPacketOut that floods for the request/response, then an OFFlowMod being sent for both request/response, then no further traffic for the same ping.
+
+Remember that running this is exactly as you did above. You go to Run - Debug Configurations -> OSGi Framework -> beacon tutorial LearningSwitch and then choose Debug to actually start the controller. Then from terminal send out a couple pings or check the bandwidth by using iperf. 
 
 === Learning Java and Beacon ===
 
