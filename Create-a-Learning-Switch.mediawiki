@@ -244,6 +244,22 @@ Here's what you'd see for an ARP packet:
   'protosrc', 'prototype', 'raw', 'set_payload', 'unpack', 'warn']
 Many fields are common to all Python objects and can be ignored, but this can be a quick way to avoid a trip to a function's documentation.
 
+===of_tutorial.py Walkthrough===
+
+Now that you have a basic overview of some of the relevant ‘of’ classes and methods, here is a simple overview of the tutorial and what you are trying to accomplish.
+
+In the initializer (the _init_ method), the class’s instance variables are set accordingly and an empty dictionary (on that will later consist of MAC Address keys to port number values) is created.
+
+The first method you see, act_like_hub, describes the hub behavior, or sending received packets to all ports, using the resend_packet. Look at the comments for these two methods for some more information about what’s going on.
+
+You will be writing the act_like_switch method in order to allow for learning switch behavior. The first thing you have to do is learn the port for the source MAC, which essentially means to populate the dictionary with the input packet’s source MAC Address and input port. Look at the Python tutorial above to learn how to add/replace items in a dictionary. (Additional thought: Do you really need to check if the key/value pair is already in there?). Furthermore, look at the corresponding fields for the method’s parameters, packet and packet_in, as both have different fields. Setting a variable to equal the corresponding port to the packet’s destination MAC Address here is recommended.
+
+Then you should create a ofp_match object and if the packet’s destination port (the one you just found) is not null, send the packet out to that port using resend_packet, and make a flow mod. Otherwise, send the packet to all ports (“Flood” behavior) by using the port “of.OFPP_ALL”.
+
+Creating an ofp_flow_mod is simple. Use the methods as described above and set the appropriate fields. The fields you should set are match (using the created ofp_match object), idle-timeout and hard-timeout (not necessary), and append a newly created ofp_action_output to the ‘actions’ field. Look at the resend_packet method to see how an ofp_action_output is created.
+
+Finally, send the flow mod out of the connection, similar again to the resend_packet method.
+
 Now, skip ahead to Testing Your Controller below.
 
 == Controller Choice: Beacon (Java) ==
