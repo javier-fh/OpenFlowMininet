@@ -86,7 +86,7 @@ Hint: every packet goes up to the controller now.
 Go to your SSH terminal and stop the tutorial hub controller using Ctrl-C.
 The file you'll modify is '''pox/misc/of_tutorial.py'''.  Open this file in your favorite editor. Vim is a good choice, it comes already downloaded with terminal. It has some funky commands to edit text so http://vim.rtorr.com can be of use. To use vim, make sure you are in the correct directory (pox/pox/misc) and enter: 
 
-vi of_tutorial.py
+ $ vi of_tutorial.py
 
 The current code calls act_like_hub() from the handler for packet_in messages to implement switch behavior.  You'll want to switch to using the act_like_switch() function, which contains a sketch of what your final learning switch code should look like.
 
