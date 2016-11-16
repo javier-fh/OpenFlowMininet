@@ -47,7 +47,7 @@ The first line is from the portion of POX that handles OpenFlow connections.  Th
 Now we verify that hosts can ping each other, and that all hosts see the exact same traffic - the behavior of a hub.  To do this, we'll create xterms for each host and view the traffic in each.  In the Mininet console, start up three xterms:
  mininet> xterm h1 h2 h3
 
-Note: the xterm command does not work and will through an error if you try to call it from the virtual box directly, instead use another terminal window to call xterm.
+Note: the xterm command does not work and will throw an error if you try to call it from the virtual box directly, instead use another terminal window to call xterm.
 
 Arrange each xterm so that they're all on the screen at once.  This may require reducing the height of to fit a cramped laptop screen.
 
