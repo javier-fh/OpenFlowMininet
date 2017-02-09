@@ -281,7 +281,9 @@ Now compare with the user-space switch.  In the mininet console:
  mininet> exit
 
 Start the same Mininet with the user-space switch:
- $ sudo mn --topo single,3 --mac --controller remote --switch user
+ $ sudo mn --topo single,3 --controller remote --switch user
+
+**Note: The reference switch (`--switch user`) [does not handle MAC address 00:00:00:00:00:01 correctly](https://github.com/mininet/mininet/issues/156), so it should not be used with `--mac`**
 
 Run one more iperf test with the reference controller:
  mininet> iperf
