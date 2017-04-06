@@ -326,30 +326,36 @@ Back in your VM, We're not going to be using the reference controller anymore, w
 The switches are all trying to connect to a controller, and will increase the period of their attempts to contact the controller, up to a maximum of 15 seconds.  Since the OpenFlow switch has not connected yet, this delay may be anything between 0 and 15 seconds.   If this is too long to wait, the switch can be configured  to wait no more than N seconds using the --max-backoff parameter.
 
 Make sure the reference controller used before is not running:
- $ sudo killall controller
+```
+$ sudo killall controller
+```
 
 You will need to tell the Mininet virtual switches to connect to your host machine's IP address.  To get that, from your Mininet ssh window run the command sudo route:
-
+```
  openflow@openflowtutorial:~$ sudo route
  Kernel IP routing table
  Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
  192.168.206.0   *               255.255.255.0   U     0      0        0 eth0
  default         192.168.206.2   0.0.0.0         UG    0      0        0 eth0
-
-Look for the line that starts with default, and typically your host's IP address will be the IP in the Gateway column.  If that IP address ends with .1, and later you are unable to connect Mininet to Beacon, try the same IP but swapping the ending .1 with .2.
+```
+Look for the line that starts with default, and typically your host's IP address will be the IP in the Gateway column.  If that IP address ends with .1, and later you are unable to connect Mininet to Beacon, try the same IP but swapping the ending .1 with .2. Also it's better to provide the listening port (default is 6633).
 
 You should also restart Mininet to make sure that everything is "clean". From your Mininet console:
+```
  mininet> exit
- $ sudo mn --topo single,3 --mac --switch ovsk --controller remote,ip=<your_host_ip>
+ $ sudo mn --topo single,3 --mac --switch ovsk --controller remote,ip=<your_host_ip>,port=<controller_listening_port>
+```
 
 Make sure you do not add extra spaces around the comma.
 
 Note: The above syntax is for Mininet 2.0 - for Mininet 1.0, use the following syntax instead:
+```
  $ sudo mn --topo single,3 --mac --switch ovsk --controller remote --ip <your_host_ip>
-
+```
 The ip parameter defines in which IP your controller is located. Note that this is the IP your host uses to communicate with the VM, as discussed above. In my case, the VM's IP is 192.168.206.4 and the host's IP is 192.168.206.2 . Thus, I started mininet using
+```
  $ sudo mn --topo single,3 --mac --switch ovsk --controller remote,ip=192.168.206.2
-
+```
 
 Now it's time to start Beacon. 
 
