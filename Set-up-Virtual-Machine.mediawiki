@@ -151,7 +151,7 @@ by typing:
  $ startx
 
 If you are familiar with Linux, you may wish to install another
-desktop manager (e.g. <tt>flwm</tt> if you want something even smaller/faster than <tt>lxde<tt> or even the full <tt>ubuntu-desktop</tt>) or any other GUI packages that you prefer.
+desktop manager (e.g. <tt>flwm</tt> if you want something even smaller/faster than <tt>lxde</tt> or even the full <tt>ubuntu-desktop</tt>) or any other GUI packages that you prefer.
 
 == Next Step ==
 
