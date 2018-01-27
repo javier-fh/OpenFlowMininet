@@ -91,7 +91,7 @@ One user reports the need to prepend with <tt>sudo</tt>, otherwise a "permission
 The <tt>show</tt> command connects to the switch and dumps out its port state and capabilities.
 
 Here's a more useful command:
- $ ovs-ofctl dump-flows s1
+ $ sudo ovs-ofctl dump-flows s1
 
 Since we haven't started any controller yet, the flow-table should be empty.
 
@@ -132,7 +132,7 @@ Do you get replies now? Check the flow-table again and look the statistics for e
 
 <!-- this doesn't seem to be true for ovs-ofctl
 NOTE: if you didn't see any ping replies coming through, it might be the case that the flow-entries expired before you start your ping test. When you do a "dpctl dump-flows" you can see an "idle_timeout" option for each entry, which defaults to 60s. This means that the flow will expire after 60secs if there is no incoming traffic. Run again respecting this limit, or install a flow-entry with longer timeout.
- $ ovs-ofctl add-flow s1 in_port=1,idle_timeout=120,actions=output:2
+ # ovs-ofctl add-flow s1 in_port=1,idle_timeout=120,actions=output:2
 -->
 
 == Start Wireshark ==
@@ -166,7 +166,7 @@ Press the apply button to apply the filter to all recorded traffic.
 
 Now, with the Wireshark dissector listening, start the OpenFlow reference controller.
 In your SSH terminal:
- $ controller ptcp:
+ $sudo controller ptcp:
 This starts a simple controller that acts as a learning switch without installing any flow-entries.
 
 You should see a bunch of messages displayed in Wireshark, from the Hello exchange onwards.  As an example, click on the Features Reply message.  Click on the triangle by the 'OpenFlow Protocol' line in the center section to expand the message fields.  Click the triangle by Switch Features to display datapath capabilities - feel free to explore.
