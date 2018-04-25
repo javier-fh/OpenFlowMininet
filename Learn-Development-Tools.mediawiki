@@ -20,7 +20,7 @@ The OpenFlowTutorial VM includes a number of OpenFlow-specific and general netwo
 
 * '''iperf''': general command-line utility for testing the speed of a single TCP connection.
 
-* '''Mininet''': network emulation platform.  Mininet creates a virtual OpenFlow network - controller, switches, hosts, and links - on a single real or virtual machine. More Mininet details can be found at the [http://openflow.org/mininet Mininet web page].
+* '''Mininet''': network emulation platform.  Mininet creates a virtual OpenFlow network - controller, switches, hosts, and links - on a single real or virtual machine. More Mininet details can be found at the [http://mininet.org/ Mininet web page].
 
 * '''cbench''': utility for testing the flow setup rate of OpenFlow controllers. 
 
@@ -79,7 +79,7 @@ Mininet has loads of other commands and startup options to help with debugging, 
 
 (Just to remind you, we are assuming that you have already started up Mininet in another window using <tt>sudo mn --topo single,3 --mac --switch ovsk --controller remote</tt>, as directed above.)
 
-<tt>ovs-ofctl<tt> is a utility that comes with Open vSwitch and enables visibility and control over a single switch's flow table.  It is especially useful for debugging, by viewing flow state and flow counters.  Most OpenFlow switches can start up with a passive listening port, from which you can poll the switch, without having to add debugging code to the controller.
+<tt>ovs-ofctl</tt> is a utility that comes with Open vSwitch and enables visibility and control over a single switch's flow table.  It is especially useful for debugging, by viewing flow state and flow counters.  Most OpenFlow switches can start up with a passive listening port, from which you can poll the switch, without having to add debugging code to the controller.
 
 Create a second SSH window if you don't already have one, and run:
  $ ovs-ofctl show s1
