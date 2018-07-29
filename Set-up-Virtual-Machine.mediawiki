@@ -130,7 +130,7 @@ If putty cannot connect, try pinging the VM's IP address to make sure you are co
  C:> ping [Guest IP Here]
 
 Once the ssh connection succeeds or a terminal window for the VM pops up, log in to the VM.  Now, type:
- $ xterm -sb 500
+ $ xterm -sl 500
 
 to start an X terminal (the -sb 500 is optional but gives 500 lines of scrollback.)
 
