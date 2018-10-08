@@ -558,7 +558,7 @@ For details, please visit the [http://osrg.github.com/ryu/ Ryu Official Site]
 === Ryu VM Image ===
 The VM image set up for Ryu is available at
 
-* [http://people.valinux.co.jp/~yamahata/ryu/openflow-tutorial/OpenFlow_Tutorial_Ryu-ovf.zip Virtual Machine Image(zipped OVF format, 64-bit, Mininet 2.0)].
+* [https://sourceforge.net/projects/ryu/files/vmimages/OpenFlowTutorial/OpenFlow_Tutorial_Ryu3.6.ova/download Virtual Machine Image(zipped OVF format, 64-bit, Mininet 2.0)].
 This can be import into virtualbox, VMWare or other popular virtualization
 programs.
 
