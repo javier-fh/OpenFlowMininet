@@ -11,8 +11,11 @@ You'll need to download the files corresponding to your OS, plus the tutorial VM
 
 Start now with downloading a compressed VM image:
 
-* [http://onlab.vicci.org/mininet-vm/mininet-2.2.0-150106-ubuntu-14.04-server-amd64.zip Virtual Machine Image (OVF format, 64-bit, Mininet 2.2.0)] (Recommended for most modern hardware and OSes)
-* [http://onlab.vicci.org/mininet-vm/mininet-2.2.0-150106-ubuntu-14.04-server-i386.zip Virtual Machine Image (OVF format, 32-bit, Mininet 2.2.0)] (Recommended for ancient hardware and Windows)
+* [https://github.com/mininet/mininet/releases/download/2.2.2/mininet-2.2.2-170321-ubuntu-14.04.4-server-amd64.zip Virtual Machine Image (OVF format, 64-bit, Mininet 2.2.2)] (Recommended for most modern hardware and OSes)
+* [https://github.com/mininet/mininet/releases/download/2.2.2/mininet-2.2.2-170321-ubuntu-14.04.4-server-i386.zip Virtual Machine Image (OVF format, 32-bit, Mininet 2.2.2)] (recommended for Windows users using VirtualBox or Hyper-V)
+
+Refer to this [https://github.com/mininet/mininet/wiki/Mininet-VM-Images (Mininet-VM-images)] for older versions of Mininet.
+
 <span style="color: red">'''Important: For these VM images, the user name is 'mininet' with password 'mininet'.'''</span>
 
 The OVF format can be imported into VirtualBox, VMware, or other popular virtualization programs.
