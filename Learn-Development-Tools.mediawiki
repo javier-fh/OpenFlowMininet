@@ -166,7 +166,9 @@ Press the apply button to apply the filter to all recorded traffic.
 
 Now, with the Wireshark dissector listening, start the OpenFlow reference controller.
 In your SSH terminal:
- $sudo controller ptcp:
+<!-- Could not get any packet if i just run "sudo controller ptcp:". And  I could not find a proper way to discover the port number execpt reading the wireshark packet with the openflow info-->
+ $sudo controller ptcp:6653
+
 This starts a simple controller that acts as a learning switch without installing any flow-entries.
 
 You should see a bunch of messages displayed in Wireshark, from the Hello exchange onwards.  As an example, click on the Features Reply message.  Click on the triangle by the 'OpenFlow Protocol' line in the center section to expand the message fields.  Click the triangle by Switch Features to display datapath capabilities - feel free to explore.
