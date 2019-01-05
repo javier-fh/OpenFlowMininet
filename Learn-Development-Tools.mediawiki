@@ -166,8 +166,8 @@ Press the apply button to apply the filter to all recorded traffic.
 
 Now, with the Wireshark dissector listening, start the OpenFlow reference controller.
 In your SSH terminal:
-<!-- Could not get any packet if i just run "sudo controller ptcp:". And  I could not find a proper way to discover the port number execpt reading the wireshark packet with the openflow info-->
- $sudo controller ptcp:6653
+
+ $sudo controller ptcp:
 
 This starts a simple controller that acts as a learning switch without installing any flow-entries.
 
