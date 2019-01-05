@@ -176,7 +176,7 @@ In your SSH terminal:
 
 This starts a simple controller that acts as a learning switch without installing any flow-entries.
 
-Restart now the prvious topology 
+Restart now the topology 
 
   $>sudo mn --topo single,3 --mac --switch ovsk --controller remote
 
