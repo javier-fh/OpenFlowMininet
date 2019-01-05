@@ -163,6 +163,11 @@ Now, set up a filter for OpenFlow control traffic, by typing 'of' in Filter box 
 Press the apply button to apply the filter to all recorded traffic.
 
 == Start Controller and view Startup messages in Wireshark ==
+<!-- https://github.com/mininet/openflow-tutorial/issues/6 -->
+First stop mininet and clean 
+
+  mininet> exit
+  $> mn -c 
 
 Now, with the Wireshark dissector listening, start the OpenFlow reference controller.
 In your SSH terminal:
@@ -170,6 +175,10 @@ In your SSH terminal:
  $sudo controller ptcp:
 
 This starts a simple controller that acts as a learning switch without installing any flow-entries.
+
+Restart now the prvious topology 
+
+  $>sudo mn --topo single,3 --mac --switch ovsk --controller remote
 
 You should see a bunch of messages displayed in Wireshark, from the Hello exchange onwards.  As an example, click on the Features Reply message.  Click on the triangle by the 'OpenFlow Protocol' line in the center section to expand the message fields.  Click the triangle by Switch Features to display datapath capabilities - feel free to explore.
 
