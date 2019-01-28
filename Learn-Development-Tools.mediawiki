@@ -172,7 +172,7 @@ First stop mininet and clean
 Now, with the Wireshark dissector listening, start the OpenFlow reference controller.
 In your SSH terminal:
 
- $sudo controller ptcp:
+ $sudo controller ptcp:6633
 
 This starts a simple controller that acts as a learning switch without installing any flow-entries.
 
