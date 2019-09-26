@@ -14,7 +14,7 @@ This step will take a while - the unpacked image is about 3 GB.
 
 You will need to complete '''one more step before you are done with the VM setup'''. 
 
-Select your VM and go to the Settings Tab. Go to Network->Adapter 2. Select the "Enable adapter" box, and attach it to "host-only network".('''Sidenote''': on a new VirtualBox installation you may not have any "host-only network" configured yet. To have one select File menu/Preferences/Network and "Add host-only network" button with default settings. Then you can try the attach.) '''This will allow you to easily access your VM through your host machine.'''
+Select your VM and go to the Settings Tab. Go to Network->Adapter 2. Select the "Enable adapter" box, and attach it to "host-only network".('''Sidenote''': on a new VirtualBox installation you may not have any "host-only network" configured yet. To have one select Global Tools -> Host Network Manager -> create or File -> Host Network Manager -> create. Click create with default settings. Then you can try the attach.) '''This will allow you to easily access your VM through your host machine.'''
 
 At that point you should be ready to start your VM. Press the "Start" arrow icon or double-click your VM within the VirtualBox window. 
 
