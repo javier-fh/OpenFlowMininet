@@ -12,7 +12,7 @@ For this tutorial you will need to choose a controller platform to build on top 
 
 ''' NOTE: The POX version of the tutorial is quite new, and feedback on the pox-dev mailing list is very welcome! '''
 
-One option for the first exercise is to use POX.  POX is a Python-based SDN controller platform geared towards research and education.  For more details on POX, see [https://openflow.stanford.edu/display/ONL/POX+Wiki/ the POX Wiki].
+One option for the first exercise is to use POX.  POX is a Python-based SDN controller platform geared towards research and education.  For more details on POX, see [https://openflow.stanford.edu/display/ONL/POX+Wiki.html the POX Wiki].
 
 We're not going to be using the reference controller anymore, which may still be running (do '<code>ps -A | grep controller</code>' if you're unsure), so you should either press Ctrl-C in the window running the controller program, or kill it from the other SSH window:
  $ sudo killall controller
