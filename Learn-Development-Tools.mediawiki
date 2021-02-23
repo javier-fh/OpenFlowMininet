@@ -159,6 +159,9 @@ Now open Wireshark:
 
 You'll probably get a warning message for using wireshark with root access. Press OK.
 
+If Wireshark doesn't start, try the command
+ $ sudo -E wireshark &
+
 Click on Capture->Interfaces in the menu bar.  Click on the Start button next to 'lo', the loopback interface.  You may see some packets going by.
 
 Now, set up a filter for OpenFlow control traffic, by typing 'of' in Filter box near the top:
