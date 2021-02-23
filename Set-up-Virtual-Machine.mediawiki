@@ -86,6 +86,9 @@ Replacing ethX with the name of a downed interfaces; sometimes the eth ports app
 
 Note the IP address (probably the 192.168 one) for the '''host-only''' network; you'll need it later.  Next, log in, which will depend on your OS.
 
+If the IP address does not appear or the SSH connection is not established, make sure you've enabled the DHCP server option on the target network adapter in VirtualBox settings. To do so, follow File > Host Network Manager, select the target network adapter, mark the DHCP server checkbox on the right.
+(If that doesn't work, go to your VM settings, by right-clicking on it, then open Network settings, select the target network adapter, open advanced settings, and check "cable connected option").
+
 === Mac OS X and Linux ===
 
 Open a terminal (Terminal.app in Mac, Gnome terminal in Ubuntu, etc).  In that terminal, run:
