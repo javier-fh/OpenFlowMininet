@@ -67,7 +67,7 @@ If you get message "X11 connection rejected because of wrong authentication" you
  $ export XAUTHORITY=$HOME/.Xauthority
 and try again.
 
-You can close these windows now, as we'll run through most commands in the Mininet console.
+You can close xterm windows now, as we'll run through most commands in the Mininet console.
 
 If Mininet is not working correctly (or has crashed and needs to be restarted), first quit Mininet if necessary (using the <code>exit</code> command, or control-D), and then try clearing any residual state or processes using:
 
