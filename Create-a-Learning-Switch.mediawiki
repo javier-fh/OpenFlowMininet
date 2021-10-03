@@ -4,9 +4,9 @@ Later, you'll turn this into a flow-based switch, where seeing a packet with a k
 
 For this tutorial you will need to choose a controller platform to build on top of.  The best option is likely the controller written in the language you are most familiar with, although we recommend POX, as the rest of the tutorial is based on it. Your options are:
 
-* '''Java''': [[#Controller_Choice_Beacon_Java|Beacon]], [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Floodlight_Java|Floodlight]]
-* '''Python''': [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_POX_Python|POX]], [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Ryu_Python|Ryu]], [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_NOX_wPython|NOX (Deprecated)]]
-* '''Ruby''': [[https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Trema_Ruby|Trema]]
+* '''Java''': [https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Beacon_Java Beacon], [https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Floodlight_Java Floodlight]
+* '''Python''': [https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_POX_Python POX], [https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Ryu_Python Ryu], [https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_NOX_wPython NOX (Deprecated)]
+* '''Ruby''': [https://github.com/mininet/openflow-tutorial/wiki/Create-a-Learning-Switch#Controller_Choice_Trema_Ruby Trema]
 
 ==Controller Choice: POX (Python) ==
 
@@ -267,7 +267,7 @@ Beacon is a Java-based OpenFlow controller platform.  For more details and tutor
 
 Beacon is very easily developed using the Eclipse Integrated Development Environment which runs on any operating system (OS).
 
-'''<span style="color:red">Therefore, for this tutorial you will you need to download Beacon and run Eclipse on your host machine, rather than inside the Mininet virtual machine.</span>'''
+'''<span style="color:red">Therefore, for this tutorial you will need to download Beacon and run Eclipse on your host machine, rather than inside the Mininet virtual machine.</span>'''
 
 The next section will help you do that.
 
@@ -281,7 +281,7 @@ You will need the following installed in your '''host machine''' :
 
 * [http://java.sun.com/javase/downloads/widget/jdk6.jsp Java 6 JDK & JRE] (Java 7 JDK is fine on OSX)
 
-Note: I you already have eclipse you need to get the PDE download, which you can by clicking on help->install new software. Then under work with choose The Eclipse Project updates and check the box for Eclipse Plugin Development Tools. 
+Note: If you already have eclipse you need to get the PDE download, which you can by clicking on help->install new software. Then under work with choose The Eclipse Project updates and check the box for Eclipse Plugin Development Tools. 
 
 If you don’t have eclipse, when you download the newest version of eclipse make sure you download the RCP + REP version. 
 
