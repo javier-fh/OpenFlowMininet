@@ -147,7 +147,7 @@ As an alternative to running X11 on your host machine, you may find it
 easier or more convenient to install a GUI into the VM itself. To install X11 
 and a simple window manager, log in to the '''VM console window''' - ''not'' via an ssh session! 
 - using the correct user name and password for your VM, and type:
- $ sudo apt-get update && sudo apt-get install xinit lxde virtualbox-guest-dkms
+ $ sudo apt-get update && sudo apt-get install xinit lxde virtualbox-guest-x11
 
 At this point, you should be able to start an X11 session in the VM console window
 by typing:
