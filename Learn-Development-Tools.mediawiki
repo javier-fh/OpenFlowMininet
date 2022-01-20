@@ -67,6 +67,8 @@ If you get message "X11 connection rejected because of wrong authentication" you
  $ export XAUTHORITY=$HOME/.Xauthority
 and try again.
 
+If you get no error and the xterm window doesn't launch, you might not have xterm installed (such as on a clean install of Ubuntu 18.04 LTS or later). You can check if xterm is installed by running <tt>xterm</tt> in a non-Mininet console. If the command is not found, you can install xterm using <tt>sudo apt-get install xterm</tt> or other method of your choice.
+
 You can close xterm windows now, as we'll run through most commands in the Mininet console.
 
 If Mininet is not working correctly (or has crashed and needs to be restarted), first quit Mininet if necessary (using the <code>exit</code> command, or control-D), and then try clearing any residual state or processes using:
@@ -162,7 +164,7 @@ You'll probably get a warning message for using wireshark with root access. Pres
 If Wireshark doesn't start, try the command
  $ sudo -E wireshark &
 
-Click on Capture->Interfaces in the menu bar.  Click on the Start button next to 'lo', the loopback interface.  You may see some packets going by.
+Click on Capture->Options... in the menu bar.  Select the 'Loopback: lo' interface, then click the Start button in the lower right of the window.  You may see some packets going by.
 
 Now, set up a filter for OpenFlow control traffic, by typing 'of' in Filter box near the top:
  of
@@ -183,7 +185,7 @@ In your SSH terminal:
 
 This starts a simple controller that acts as a learning switch without installing any flow-entries.
 
-Restart now the topology 
+Now restart the topology: 
 
   $>sudo mn --topo single,3 --mac --switch ovsk --controller remote
 
@@ -224,6 +226,8 @@ These messages include:
 
 
 Since all messages are sent over localhost when using Mininet, determining the sender of a message can get confusing when there are lots of emulated switches.  However, this won't be an issue, since we only have one switch.  The controller is at the standard OpenFlow port (6633), while the switch is at some other user-level port.
+
+You can optionally add columns for the source and destination ports of each packet by right-clicking on the column headers and selecting 'Column Preferences...'. Use the green plus button to add a column then enter a name, double click on the type field to change it, and drag and drop to the order you desire. Click OK when done updating your preferences.
 
 == View OpenFlow Messages for Ping ==
 Now, we'll view messages generated in response to packets.
@@ -301,7 +305,7 @@ Now compare with the user-space switch.  In the mininet console:
 Start the same Mininet with the user-space switch:
  $ sudo mn --topo single,3 --controller remote --switch user
 
-**Note: The reference switch (`--switch user`) [does not handle MAC address 00:00:00:00:00:01 correctly](https://github.com/mininet/mininet/issues/156), so it should not be used with `--mac`**
+**Note: The reference switch (`--switch user`) [https://github.com/mininet/mininet/issues/156 does not handle MAC address 00:00:00:00:00:01 correctly], so it should not be used with `--mac`**
 
 Run one more iperf test with the reference controller:
  mininet> iperf
