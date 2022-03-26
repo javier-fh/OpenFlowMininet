@@ -124,9 +124,9 @@ Open a terminal: click the Windows 'Start' button, 'run', then enter 'cmd'.
 Change to the directory where you saved putty.  
  C:> cd <dir>
 Run: 
- C:> putty.exe -X openflow@[Guest IP Here]
+ C:> putty.exe -X [username]@[Guest IP Here]
 
-Replace [Guest IP Here] with the IP you just noted.
+Replace [username] with the user you want and [Guest IP Here] with the IP you just noted.
 
 If putty cannot connect, try pinging the VM's IP address to make sure you are connecting to the correct interface.
 
